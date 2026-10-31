@@ -71,6 +71,7 @@
     "cart_show_note": true,
     "cart_enable_free_shipping": true,
     "cart_free_shipping_threshold": 100,
+    "cart_upsell_collection": "frontpage",
     "predictive_search_enabled": true,
     "predictive_search_show_vendor": false,
     "predictive_search_show_price": true,
