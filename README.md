@@ -85,3 +85,4 @@ shopify theme dev --store your-store.myshopify.com
 
 ## License
 Created for Shopify Online Store 2.0. All rights reserved.
+

@@ -11,3 +11,4 @@ All notable changes to the **Auralis** theme will be documented in this file.
 - **Cart API & Section Rendering:** Real-time Ajax cart drawer with dynamic free shipping progress bar and cart notes.
 - **Accessibility:** Semantic HTML5, skip to content link, WCAG 2.1 AA focus visible outlines, keyboard focus trap on all overlays.
 - **SEO & Performance:** Full JSON-LD structured data (Product, Organization, WebSite, Breadcrumbs, Article, FAQPage), single H1 rule, preloaded fonts, responsive images with srcset and high fetchpriority on LCP.
+
