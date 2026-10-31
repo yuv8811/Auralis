@@ -1,4 +1,4 @@
-# Auralis — Shopify Online Store 2.0 Theme
+# Auranova — Shopify Online Store 2.0 Theme
 
 A complete, original Shopify Online Store 2.0 theme built from scratch with zero framework bloat, zero dependencies, and an obsession with speed, accessibility, and merchant customization.
 

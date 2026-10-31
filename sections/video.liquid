@@ -12,6 +12,7 @@
           <iframe
             src="https://www.youtube-nocookie.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1"
             class="js-youtube"
+            loading="lazy"
             allow="autoplay; encrypted-media"
             allowfullscreen
             title="{{ section.settings.description | escape }}"></iframe>
@@ -19,6 +20,7 @@
           <iframe
             src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}"
             class="js-vimeo"
+            loading="lazy"
             allow="autoplay; encrypted-media"
             allowfullscreen
             title="{{ section.settings.description | escape }}"></iframe>

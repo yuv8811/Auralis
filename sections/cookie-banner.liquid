@@ -48,18 +48,18 @@
     document.addEventListener('DOMContentLoaded', () => {
       const banner = document.getElementById('CookieConsentBanner');
       if (!banner) return;
-      if (!localStorage.getItem('auralis_cookie_consent')) {
+      if (!localStorage.getItem('auranova_cookie_consent')) {
         banner.removeAttribute('hidden');
       }
       document.getElementById('AcceptCookies')?.addEventListener('click', () => {
-        localStorage.setItem('auralis_cookie_consent', 'accepted');
+        localStorage.setItem('auranova_cookie_consent', 'accepted');
         if (window.Shopify && window.Shopify.customerPrivacy) {
           window.Shopify.customerPrivacy.setTrackingConsent(true, () => {});
         }
         banner.setAttribute('hidden', 'true');
       });
       document.getElementById('DeclineCookies')?.addEventListener('click', () => {
-        localStorage.setItem('auralis_cookie_consent', 'declined');
+        localStorage.setItem('auranova_cookie_consent', 'declined');
         if (window.Shopify && window.Shopify.customerPrivacy) {
           window.Shopify.customerPrivacy.setTrackingConsent(false, () => {});
         }

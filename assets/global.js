@@ -1,5 +1,5 @@
 /**
- * Auralis Core Global Utilities & Web Components
+ * Auranova Core Global Utilities & Web Components
  * Pure Vanilla JS, zero dependencies, ES Module
  */
 

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **Auralis** theme will be documented in this file.
+All notable changes to the **Auranova** theme will be documented in this file.
 
 ## [1.0.0] - 2026-10-31
 

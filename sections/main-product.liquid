@@ -77,22 +77,14 @@
                                   assign is_color = true
                                 endif
                               %}
-                              <label class="swatch-item">
-                                <input
-                                  type="radio"
-                                  name="{{ option.name }}"
-                                  value="{{ value | escape }}"
-                                  data-option-input
-                                  class="visually-hidden"
-                                  {% if is_checked %}checked{% endif %}>
-                                <span class="swatch-item__label {% if is_color %}swatch-item__label--color{% else %}swatch-item__label--pill{% endif %}">
-                                  {% if is_color %}
-                                    <span class="swatch-item__swatch" style="background-color: {{ value | downcase | remove: ' ' }};"></span>
-                                  {% else %}
-                                    <span>{{ value }}</span>
-                                  {% endif %}
-                                </span>
-                              </label>
+                              {% render 'color-swatch',
+                                value: value,
+                                name: option.name,
+                                checked: is_checked,
+                                option_index: forloop.parentloop.index0,
+                                product_id: product.id,
+                                is_color: is_color
+                              %}
                             {%- endfor -%}
                           </div>
                         </fieldset>

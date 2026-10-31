@@ -26,16 +26,19 @@
   <div class="price__container">
     {%- if compare_at_price > price -%}
       <div class="price__sale">
-        <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+        {%- assign sale_lbl = 'products.product.sale_price' | t -%}
+        {% render 'visually-hidden', text: sale_lbl %}
         <span class="price-item price-item--sale">{{ money_price }}</span>
-        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+        {%- assign reg_lbl = 'products.product.regular_price' | t -%}
+        {% render 'visually-hidden', text: reg_lbl %}
         <s>
           <span class="price-item price-item--regular price-item--compare">{{ compare_at_price | money }}</span>
         </s>
       </div>
     {%- else -%}
       <div class="price__regular">
-        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+        {%- assign reg_lbl = 'products.product.regular_price' | t -%}
+        {% render 'visually-hidden', text: reg_lbl %}
         <span class="price-item price-item--regular">{{ money_price }}</span>
       </div>
     {%- endif -%}

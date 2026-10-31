@@ -1,15 +1,5 @@
-/*
- * ------------------------------------------------------------
- * IMPORTANT: The contents of this file are auto-generated.
- *
- * This file may be updated by the Shopify admin theme editor
- * or related systems. Please exercise caution as any changes
- * made to this file may be overwritten.
- * ------------------------------------------------------------
- */
 {
   "current": {
-    "logo": "shopify://shop_images/theme_cover_image.jpg",
     "logo_width": 130,
     "color_scheme_1_bg": "#FFFFFF",
     "color_scheme_1_text": "#121212",
@@ -83,5 +73,82 @@
     "enable_hover_zoom": true,
     "custom_css": "",
     "content_for_index": []
+  },
+  "presets": {
+    "Auranova": {
+      "logo_width": 130,
+      "color_scheme_1_bg": "#FFFFFF",
+      "color_scheme_1_text": "#121212",
+      "color_scheme_1_accent": "#0E3B33",
+      "color_scheme_1_button_bg": "#121212",
+      "color_scheme_1_button_label": "#FFFFFF",
+      "color_scheme_1_border": "#E5E5E5",
+      "color_scheme_2_bg": "#FBF9F5",
+      "color_scheme_2_text": "#2D2825",
+      "color_scheme_2_accent": "#9E6746",
+      "color_scheme_2_button_bg": "#2D2825",
+      "color_scheme_2_button_label": "#FAF8F5",
+      "color_scheme_2_border": "#EAE5DC",
+      "color_scheme_3_bg": "#F4F4F4",
+      "color_scheme_3_text": "#181818",
+      "color_scheme_3_accent": "#000000",
+      "color_scheme_3_button_bg": "#000000",
+      "color_scheme_3_button_label": "#FFFFFF",
+      "color_scheme_3_border": "#E0E0E0",
+      "color_scheme_4_bg": "#111111",
+      "color_scheme_4_text": "#F5F5F5",
+      "color_scheme_4_accent": "#E0A96D",
+      "color_scheme_4_button_bg": "#FFFFFF",
+      "color_scheme_4_button_label": "#111111",
+      "color_scheme_4_border": "#333333",
+      "color_scheme_5_bg": "#1C1E21",
+      "color_scheme_5_text": "#ECEFF1",
+      "color_scheme_5_accent": "#64B5F6",
+      "color_scheme_5_button_bg": "#ECEFF1",
+      "color_scheme_5_button_label": "#1C1E21",
+      "color_scheme_5_border": "#2E3338",
+      "font_heading": "assistant_n7",
+      "font_body": "assistant_n4",
+      "heading_scale": 100,
+      "body_scale": 100,
+      "heading_uppercase": false,
+      "heading_letter_spacing": 0,
+      "page_width": 1400,
+      "spacing_grid_horizontal": 24,
+      "spacing_grid_vertical": 24,
+      "spacing_sections_desktop": 64,
+      "spacing_sections_mobile": 36,
+      "corner_radius": 6,
+      "button_shape": "rounded",
+      "button_uppercase": false,
+      "button_border_width": 1,
+      "card_image_ratio": "portrait",
+      "card_show_secondary_image": true,
+      "card_show_vendor": false,
+      "card_show_rating": true,
+      "card_enable_quick_add": true,
+      "card_text_alignment": "left",
+      "sale_badge_type": "percentage",
+      "badge_sale_bg": "#D32F2F",
+      "badge_sale_text": "#FFFFFF",
+      "badge_sold_out_bg": "#616161",
+      "badge_sold_out_text": "#FFFFFF",
+      "cart_type": "drawer",
+      "cart_show_note": true,
+      "cart_enable_free_shipping": true,
+      "cart_free_shipping_threshold": 100,
+      "cart_upsell_collection": "frontpage",
+      "predictive_search_enabled": true,
+      "predictive_search_show_vendor": false,
+      "predictive_search_show_price": true,
+      "show_breadcrumbs": true,
+      "enable_back_to_top": true,
+      "enable_cookie_banner": false,
+      "enable_age_verification": false,
+      "enable_scroll_reveal": true,
+      "enable_hover_zoom": true,
+      "custom_css": "",
+      "content_for_index": []
+    }
   }
 }

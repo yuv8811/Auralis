@@ -39,6 +39,9 @@
     {% if aria_label != blank %}aria-label="{{ aria_label }}"{% endif %}
     {{ attributes }}>
     <span class="button__text">{{ text }}</span>
+    {% if show_spinner %}
+      {% render 'loading-spinner' %}
+    {% endif %}
   </button>
 {% endif %}
 
