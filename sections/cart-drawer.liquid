@@ -1,0 +1,148 @@
+{{ 'component-cart-drawer.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'component-cart-drawer.js' | asset_url }}" type="module"></script>
+
+<cart-drawer>
+  <div
+    class="cart-drawer color-{{ section.settings.color_scheme }}"
+    aria-hidden="true"
+    role="dialog"
+    aria-modal="true"
+    aria-label="{{ 'sections.cart.title' | t }}">
+    <div class="cart-drawer__header">
+      <h2 class="cart-drawer__title">{{ 'sections.cart.title' | t }}</h2>
+      <button type="button" class="cart-drawer__close" aria-label="{{ 'general.accessibility.close' | t }}">
+        {% render 'icon', icon: 'close', class: 'icon' %}
+      </button>
+    </div>
+
+    {%- if settings.cart_enable_free_shipping -%}
+      {% liquid
+        assign threshold_cents = settings.cart_free_shipping_threshold | times: 100
+        assign subtotal = cart.total_price
+        assign remaining_cents = threshold_cents | minus: subtotal
+        assign progress_percent = subtotal | times: 100.0 | divided_by: threshold_cents
+        if progress_percent > 100
+          assign progress_percent = 100
+        endif
+      %}
+      <div class="cart-drawer__shipping-bar">
+        {%- if remaining_cents <= 0 -%}
+          <span>{{ 'sections.cart.free_shipping_unlocked' | t }}</span>
+        {%- else -%}
+          <span>{{ 'sections.cart.free_shipping_remaining_html' | t: remaining: remaining_cents | money }}</span>
+        {%- endif -%}
+        <div class="cart-drawer__shipping-progress-bg">
+          <div class="cart-drawer__shipping-progress-fill" style="width: {{ progress_percent }}%;"></div>
+        </div>
+      </div>
+    {%- endif -%}
+
+    <div class="cart-drawer__items">
+      {%- if cart.empty? -%}
+        <div class="cart-drawer__empty">
+          <p>{{ 'sections.cart.empty' | t }}</p>
+          {%- assign continue_text = 'sections.cart.continue_shopping' | t -%}
+          {% render 'button', href: routes.all_products_collection_url, text: continue_text, style: 'primary' %}
+        </div>
+      {%- else -%}
+        <ul class="cart-drawer__item-list list-unstyled" role="list">
+          {%- for item in cart.items -%}
+            <li class="cart-item" data-line-item-key="{{ item.key }}">
+              <div class="cart-item__media">
+                {%- if item.image -%}
+                  {{ item.image | image_url: width: 200 | image_tag: class: 'cart-item__image', loading: 'lazy', alt: item.title | escape }}
+                {%- endif -%}
+              </div>
+              <div class="cart-item__details">
+                <a href="{{ item.url }}" class="cart-item__title">{{ item.product.title | escape }}</a>
+                {%- unless item.product.has_only_default_variant -%}
+                  <span class="cart-item__variant-title">{{ item.variant.title | escape }}</span>
+                {%- endunless -%}
+                <div class="cart-item__price">
+                  {{ item.final_line_price | money }}
+                </div>
+                <div class="cart-item__actions">
+                  <div class="cart-item__quantity">
+                    <quantity-input class="quantity">
+                      <button type="button" name="minus" class="quantity__button" aria-label="{{ 'general.accessibility.previous' | t }}">
+                        {% render 'icon', icon: 'minus', class: 'icon icon--small' %}
+                      </button>
+                      <input
+                        type="number"
+                        class="quantity__input"
+                        name="updates[]"
+                        data-line="{{ forloop.index }}"
+                        value="{{ item.quantity }}"
+                        min="0"
+                        aria-label="{{ 'sections.cart.quantity' | t }}">
+                      <button type="button" name="plus" class="quantity__button" aria-label="{{ 'general.accessibility.next' | t }}">
+                        {% render 'icon', icon: 'plus', class: 'icon icon--small' %}
+                      </button>
+                    </quantity-input>
+                  </div>
+                  <button
+                    type="button"
+                    class="cart-item__remove"
+                    data-remove-line="{{ forloop.index }}"
+                    aria-label="{{ 'sections.cart.remove_title' | t: title: item.title }}">
+                    {{ 'sections.cart.remove_title' | t: title: '' }}
+                  </button>
+                </div>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+
+    {%- unless cart.empty? -%}
+      <div class="cart-drawer__footer">
+        {%- if settings.cart_show_note -%}
+          <details class="cart-drawer__note-details">
+            <summary class="cart-drawer__note-summary caption">{{ 'sections.cart.note' | t }}</summary>
+            <textarea
+              name="note"
+              class="field__input"
+              rows="3"
+              placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+          </details>
+        {%- endif -%}
+
+        <div class="cart-drawer__subtotal-row">
+          <span>{{ 'sections.cart.subtotal' | t }}</span>
+          <span>{{ cart.total_price | money_with_currency }}</span>
+        </div>
+        <p class="cart-drawer__disclaimer">
+          {{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}
+        </p>
+
+        <form action="{{ routes.cart_url }}" method="post" id="CartDrawer-Form">
+          <button type="submit" name="checkout" class="button button--primary button--full">
+            <span>{{ 'sections.cart.checkout' | t }}</span>
+          </button>
+        </form>
+      </div>
+    {%- endunless -%}
+  </div>
+</cart-drawer>
+
+{% schema %}
+{
+  "name": "Cart drawer",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

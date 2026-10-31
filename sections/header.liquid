@@ -1,0 +1,211 @@
+{{ 'section-header.css' | asset_url | stylesheet_tag }}
+
+<header-component
+  class="header-wrapper color-{{ section.settings.color_scheme }}{% if section.settings.enable_sticky %} header-wrapper--sticky{% endif %}{% if section.settings.enable_transparent and template == 'index' %} header-wrapper--transparent{% endif %}"
+  data-sticky="{{ section.settings.enable_sticky }}">
+  <div class="page-width">
+    <header class="header header--logo-{{ section.settings.logo_position }}" role="banner">
+      <!-- Mobile Menu Toggle Button -->
+      <button
+        type="button"
+        class="header__mobile-toggle"
+        aria-label="{{ 'general.accessibility.menu' | t }}"
+        aria-controls="MobileNavDrawer"
+        aria-expanded="false">
+        {% render 'icon', icon: 'menu', class: 'icon' %}
+      </button>
+
+      <!-- Store Logo / Title -->
+      <div class="header__heading">
+        <a href="{{ routes.root_url }}" class="header__heading-link">
+          {%- if settings.logo != blank -%}
+            {%- assign logo_alt = settings.logo.alt | default: shop.name | escape -%}
+            {{ settings.logo | image_url: width: 600 | image_tag:
+              class: 'header__logo',
+              alt: logo_alt,
+              widths: '150, 300, 600',
+              loading: 'eager',
+              fetchpriority: 'high'
+            }}
+          {%- else -%}
+            <span class="header__heading-text">{{ shop.name }}</span>
+          {%- endif -%}
+        </a>
+      </div>
+
+      <!-- Desktop Navigation Menu -->
+      <nav class="header__nav" role="navigation" aria-label="{{ 'sections.header.menu' | t }}">
+        <ul class="header__menu-list list-unstyled" role="list">
+          {%- for link in section.settings.menu.links -%}
+            <li class="header__menu-item">
+              {%- if link.links != blank -%}
+                <a href="{{ link.url }}" class="header__menu-link" aria-expanded="false">
+                  <span>{{ link.title | escape }}</span>
+                  {% render 'icon', icon: 'chevron-down', class: 'icon icon--small' %}
+                </a>
+                <ul class="header__dropdown list-unstyled" role="list">
+                  {%- for childlink in link.links -%}
+                    <li class="header__dropdown-item">
+                      <a href="{{ childlink.url }}" class="header__dropdown-link">
+                        {{ childlink.title | escape }}
+                      </a>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- else -%}
+                <a href="{{ link.url }}" class="header__menu-link">
+                  <span>{{ link.title | escape }}</span>
+                </a>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </nav>
+
+      <!-- Action Icons (Search, Account, Cart) -->
+      <div class="header__icons">
+        {%- if settings.predictive_search_enabled -%}
+          <button
+            type="button"
+            class="header__icon"
+            aria-label="{{ 'general.breadcrumbs.search' | t }}"
+            aria-haspopup="dialog"
+            data-open-search>
+            {% render 'icon', icon: 'search', class: 'icon' %}
+          </button>
+        {%- endif -%}
+
+        {%- if shop.customer_accounts_enabled -%}
+          <a
+            href="{%- if customer -%}{{ routes.account_url }}{%- else -%}{{ routes.account_login_url }}{%- endif -%}"
+            class="header__icon"
+            aria-label="{{ 'customer.account.title' | t }}">
+            {% render 'icon', icon: 'user', class: 'icon' %}
+          </a>
+        {%- endif -%}
+
+        <a
+          href="{{ routes.cart_url }}"
+          class="header__icon"
+          id="cart-icon-bubble"
+          aria-label="{{ 'sections.header.cart_count' | t: count: cart.item_count }}"
+          {% if settings.cart_type == 'drawer' %}data-open-cart-drawer{% endif %}>
+          {% render 'icon', icon: 'cart', class: 'icon' %}
+          <div class="header__cart-count" aria-hidden="true">
+            <span>{{ cart.item_count }}</span>
+          </div>
+        </a>
+      </div>
+    </header>
+  </div>
+</header-component>
+
+<!-- Mobile Navigation Drawer -->
+<div id="MobileNavDrawer" class="mobile-nav-drawer" aria-hidden="true" role="dialog" aria-modal="true" aria-label="{{ 'sections.header.menu' | t }}">
+  <div class="mobile-nav-drawer__header">
+    <span class="header__heading-text">{{ shop.name }}</span>
+    <button type="button" class="mobile-nav-drawer__close" aria-label="{{ 'general.accessibility.close' | t }}">
+      {% render 'icon', icon: 'close', class: 'icon' %}
+    </button>
+  </div>
+  <div class="mobile-nav-drawer__content">
+    <nav class="mobile-nav-drawer__nav">
+      <ul class="mobile-nav-drawer__list list-unstyled" role="list">
+        {%- for link in section.settings.menu.links -%}
+          <li class="mobile-nav-drawer__item">
+            <a href="{{ link.url }}" class="mobile-nav-drawer__link">
+              {{ link.title | escape }}
+            </a>
+          </li>
+        {%- endfor -%}
+      </ul>
+    </nav>
+  </div>
+</div>
+<div class="drawer-backdrop" aria-hidden="true"></div>
+
+<script>
+  // Mobile drawer interaction handler
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.querySelector('.header__mobile-toggle');
+    const drawer = document.getElementById('MobileNavDrawer');
+    const closeBtn = document.querySelector('.mobile-nav-drawer__close');
+    const backdrop = document.querySelector('.drawer-backdrop');
+
+    if (!toggleBtn || !drawer) return;
+
+    function openDrawer() {
+      drawer.classList.add('is-open');
+      drawer.setAttribute('aria-hidden', 'false');
+      backdrop?.classList.add('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      drawer.classList.remove('is-open');
+      drawer.setAttribute('aria-hidden', 'true');
+      backdrop?.classList.remove('is-active');
+      toggleBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    toggleBtn.addEventListener('click', openDrawer);
+    closeBtn?.addEventListener('click', closeDrawer);
+    backdrop?.addEventListener('click', closeDrawer);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && drawer.classList.contains('is-open')) {
+        closeDrawer();
+      }
+    });
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Main menu"
+    },
+    {
+      "type": "select",
+      "id": "logo_position",
+      "label": "Logo position",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_sticky",
+      "label": "Enable sticky header",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_transparent",
+      "label": "Enable transparent header on home page",
+      "default": false
+    }
+  ]
+}
+{% endschema %}

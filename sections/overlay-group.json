@@ -1,0 +1,38 @@
+{
+  "name": "Overlay Group",
+  "type": "aside",
+  "sections": {
+    "cart-drawer": {
+      "type": "cart-drawer",
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "search-overlay": {
+      "type": "search-overlay",
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "cookie-banner": {
+      "type": "cookie-banner",
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "popup-newsletter": {
+      "type": "popup-newsletter",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "heading": "Join our inner circle",
+        "text": "<p>Sign up to receive private drops, early access, and curated editorial stories.</p>"
+      }
+    }
+  },
+  "order": [
+    "cart-drawer",
+    "search-overlay",
+    "cookie-banner",
+    "popup-newsletter"
+  ]
+}

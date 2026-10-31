@@ -1,0 +1,45 @@
+{
+  "name": "Footer",
+  "type": "footer",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "about": {
+          "type": "text",
+          "settings": {
+            "heading": "About Auralis",
+            "subtext": "<p>A refined editorial storefront designed for modern brands prioritizing elegance, craftsmanship, and performance.</p>"
+          }
+        },
+        "links": {
+          "type": "link_list",
+          "settings": {
+            "heading": "Quick links",
+            "menu": "footer"
+          }
+        },
+        "newsletter": {
+          "type": "newsletter",
+          "settings": {
+            "heading": "Subscribe",
+            "subtext": "Join our inner circle for new collections and private drops."
+          }
+        }
+      },
+      "block_order": [
+        "about",
+        "links",
+        "newsletter"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "show_payment_icons": true,
+        "show_social": true
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

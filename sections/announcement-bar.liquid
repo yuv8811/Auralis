@@ -1,0 +1,70 @@
+{{ 'section-header.css' | asset_url | stylesheet_tag }}
+
+<div class="announcement-bar color-{{ section.settings.color_scheme }}" role="region" aria-label="{{ 'sections.header.announcement' | t }}">
+  <div class="page-width">
+    {%- for block in section.blocks -%}
+      <div class="announcement-bar__item" {{ block.shopify_attributes }}>
+        {%- if block.settings.text != blank -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" class="announcement-bar__link">
+              <span class="announcement-bar__message">{{ block.settings.text | escape }}</span>
+            </a>
+          {%- else -%}
+            <span class="announcement-bar__message">{{ block.settings.text | escape }}</span>
+          {%- endif -%}
+        {%- endif -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Announcement bar",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-4"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "announcement",
+      "name": "Announcement",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Complimentary worldwide shipping on orders over $100",
+          "label": "Announcement text"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Announcement bar",
+      "blocks": [
+        {
+          "type": "announcement"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

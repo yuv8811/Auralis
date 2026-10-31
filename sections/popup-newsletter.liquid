@@ -1,0 +1,71 @@
+<div
+  id="NewsletterPopup-{{ section.id }}"
+  class="modal newsletter-popup color-{{ section.settings.color_scheme }}"
+  role="dialog"
+  aria-modal="true"
+  aria-label="{{ section.settings.heading | escape }}"
+  hidden>
+  <div class="modal__dialog">
+    <button type="button" class="modal__close" aria-label="{{ 'general.accessibility.close' | t }}">
+      {% render 'icon', icon: 'close', class: 'icon' %}
+    </button>
+    <div class="modal__content text-center">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="newsletter-popup__title">{{ section.settings.heading | escape }}</h2>
+      {%- endif -%}
+      {%- if section.settings.text != blank -%}
+        <div class="newsletter-popup__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+      {% form 'customer', class: 'newsletter-popup__form' %}
+        <input type="hidden" name="contact[tags]" value="newsletter">
+        <div class="field">
+          <label class="visually-hidden" for="PopupEmail-{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+          <input
+            id="PopupEmail-{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="field__input text-center"
+            value="{{ form.email }}"
+            placeholder="{{ 'newsletter.placeholder' | t }}"
+            required>
+        </div>
+        <button type="submit" class="button button--primary button--full" name="commit">
+          <span>{{ 'newsletter.button_label' | t }}</span>
+        </button>
+      {% endform %}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter popup",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Join our inner circle",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Sign up to receive private drops, early access, and curated editorial stories.</p>",
+      "label": "Text"
+    }
+  ]
+}
+{% endschema %}

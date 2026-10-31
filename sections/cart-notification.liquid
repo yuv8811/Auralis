@@ -1,0 +1,41 @@
+<div id="cart-notification" class="cart-notification color-{{ section.settings.color_scheme }}" aria-modal="true" aria-label="{{ 'general.accessibility.loading' | t }}" role="dialog" tabindex="-1" hidden>
+  <div class="cart-notification__header">
+    <h3 class="cart-notification__heading caption-large text-body">
+      {% render 'icon', icon: 'check', class: 'icon icon--small' %}
+      Item added to your cart
+    </h3>
+    <button type="button" class="cart-notification__close" aria-label="{{ 'general.accessibility.close' | t }}">
+      {% render 'icon', icon: 'close', class: 'icon icon--small' %}
+    </button>
+  </div>
+  <div id="cart-notification-product" class="cart-notification-product"></div>
+  <div class="cart-notification__links">
+    <a href="{{ routes.cart_url }}" class="button button--secondary button--full">{{ 'sections.cart.view_cart' | t }}</a>
+    <form action="{{ routes.cart_url }}" method="post" id="cart-notification-form">
+      <button class="button button--primary button--full" name="checkout">
+        {{ 'sections.cart.checkout' | t }}
+      </button>
+    </form>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart notification",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}

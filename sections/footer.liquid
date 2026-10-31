@@ -1,0 +1,209 @@
+{{ 'section-footer.css' | asset_url | stylesheet_tag }}
+
+<footer class="footer color-{{ section.settings.color_scheme }}" role="contentinfo">
+  <div class="page-width">
+    {%- if section.blocks.size > 0 -%}
+      <div class="footer__grid">
+        {%- for block in section.blocks -%}
+          <div class="footer__block footer__block--{{ block.type }}" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+              {%- when 'link_list' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="footer__block-title">{{ block.settings.heading | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.menu != blank -%}
+                  <ul class="footer__menu-list list-unstyled" role="list">
+                    {%- for link in block.settings.menu.links -%}
+                      <li class="footer__menu-item">
+                        <a href="{{ link.url }}" class="footer__menu-link">
+                          {{ link.title | escape }}
+                        </a>
+                      </li>
+                    {%- endfor -%}
+                  </ul>
+                {%- endif -%}
+
+              {%- when 'text' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="footer__block-title">{{ block.settings.heading | escape }}</h3>
+                {%- endif -%}
+                <div class="footer__text rte">
+                  {{ block.settings.subtext }}
+                </div>
+
+              {%- when 'newsletter' -%}
+                {%- if block.settings.heading != blank -%}
+                  <h3 class="footer__block-title">{{ block.settings.heading | escape }}</h3>
+                {%- endif -%}
+                {%- if block.settings.subtext != blank -%}
+                  <p class="footer__newsletter-text">{{ block.settings.subtext }}</p>
+                {%- endif -%}
+                {% form 'customer', class: 'footer__newsletter-form' %}
+                  <input type="hidden" name="contact[tags]" value="newsletter">
+                  <div class="field">
+                    <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">
+                      {{ 'newsletter.label' | t }}
+                    </label>
+                    <input
+                      id="NewsletterForm--{{ section.id }}"
+                      type="email"
+                      name="contact[email]"
+                      class="field__input"
+                      value="{{ form.email }}"
+                      aria-required="true"
+                      autocorrect="off"
+                      autocapitalize="off"
+                      autocomplete="email"
+                      placeholder="{{ 'newsletter.placeholder' | t }}"
+                      required>
+                  </div>
+                  <button type="submit" class="button button--primary" name="commit">
+                    <span>{{ 'newsletter.button_label' | t }}</span>
+                  </button>
+                  {%- if form.posted_successfully? -%}
+                    <p class="form-status form-status--success" tabindex="-1" autofocus>
+                      {{ 'newsletter.success' | t }}
+                    </p>
+                  {%- endif -%}
+                {% endform %}
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="footer__bottom">
+      <div class="footer__copyright">
+        <small class="footer__copyright-text">
+          &copy; {{ 'now' | date: '%Y' }}, {{ shop.name | link_to: routes.root_url }}. {{ 'sections.footer.copyright' | t }}
+        </small>
+      </div>
+
+      {%- if section.settings.show_social -%}
+        <div class="footer__social">
+          {% render 'social-icons', class: 'social-icons' %}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.show_payment_icons and shop.enabled_payment_types != empty -%}
+        <div class="footer__payment">
+          <span class="visually-hidden">{{ 'sections.footer.payment_methods' | t }}</span>
+          <ul class="footer__payment-list list-unstyled" role="list">
+            {%- for type in shop.enabled_payment_types -%}
+              <li class="footer__payment-item">
+                {{ type | payment_type_svg_tag: class: 'footer__payment-icon' }}
+              </li>
+            {%- endfor -%}
+          </ul>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social media icons",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "link_list",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Quick links",
+          "label": "Heading"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "default": "footer",
+          "label": "Menu"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "About / Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "About Auralis",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "subtext",
+          "default": "<p>A refined editorial storefront designed for modern brands prioritizing elegance, craftsmanship, and performance.</p>",
+          "label": "Subtext"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Subscribe",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "subtext",
+          "default": "Join our inner circle for new collections and private drops.",
+          "label": "Subtext"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Footer",
+      "blocks": [
+        {
+          "type": "text"
+        },
+        {
+          "type": "link_list"
+        },
+        {
+          "type": "newsletter"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

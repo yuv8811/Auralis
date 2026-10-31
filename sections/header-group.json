@@ -1,0 +1,37 @@
+{
+  "name": "Header",
+  "type": "header",
+  "sections": {
+    "announcement-bar": {
+      "type": "announcement-bar",
+      "blocks": {
+        "announcement": {
+          "type": "announcement",
+          "settings": {
+            "text": "Complimentary worldwide shipping on orders over $100"
+          }
+        }
+      },
+      "block_order": [
+        "announcement"
+      ],
+      "settings": {
+        "color_scheme": "scheme-4"
+      }
+    },
+    "header": {
+      "type": "header",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "menu": "main-menu",
+        "logo_position": "left",
+        "enable_sticky": true,
+        "enable_transparent": false
+      }
+    }
+  },
+  "order": [
+    "announcement-bar",
+    "header"
+  ]
+}

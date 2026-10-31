@@ -1,0 +1,57 @@
+{{ 'component-predictive-search.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'component-predictive-search.js' | asset_url }}" type="module"></script>
+
+<predictive-search>
+  <div
+    class="search-overlay color-{{ section.settings.color_scheme }}"
+    role="dialog"
+    aria-modal="true"
+    aria-hidden="true"
+    aria-label="{{ 'general.breadcrumbs.search' | t }}">
+    <div class="search-overlay__header">
+      <span class="caption">{{ 'general.breadcrumbs.search' | t }}</span>
+      <button type="button" class="search-overlay__close" aria-label="{{ 'general.accessibility.close' | t }}">
+        {% render 'icon', icon: 'close', class: 'icon' %}
+      </button>
+    </div>
+
+    <div class="search-overlay__form-wrapper">
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-overlay__form">
+        <input
+          type="search"
+          name="q"
+          class="search-overlay__input"
+          placeholder="Search products, collections, stories..."
+          aria-label="{{ 'general.breadcrumbs.search' | t }}"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="off"
+          spellcheck="false">
+        <input type="hidden" name="options[prefix]" value="last">
+      </form>
+    </div>
+
+    <div class="search-overlay__results" aria-live="polite"></div>
+  </div>
+</predictive-search>
+
+{% schema %}
+{
+  "name": "Search overlay",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
