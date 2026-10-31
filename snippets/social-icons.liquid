@@ -1,0 +1,53 @@
+{% comment %}
+  Renders social icons based on theme settings.
+  Accepts:
+  - class: {String} CSS class for container
+{% endcomment %}
+{% liquid
+  assign social_class = class | default: 'social-icons'
+%}
+
+<ul class="{{ social_class }} list-unstyled" role="list">
+  {%- if settings.social_instagram_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_instagram_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Instagram">
+        {% render 'icon', icon: 'instagram', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_facebook_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_facebook_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Facebook">
+        {% render 'icon', icon: 'facebook', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_tiktok_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_tiktok_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="TikTok">
+        {% render 'icon', icon: 'tiktok', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_pinterest_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_pinterest_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="Pinterest">
+        {% render 'icon', icon: 'pinterest', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_youtube_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_youtube_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="YouTube">
+        {% render 'icon', icon: 'youtube', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+  {%- if settings.social_x_link != blank -%}
+    <li class="social-icons__item">
+      <a href="{{ settings.social_x_link }}" class="social-icons__link" target="_blank" rel="noopener" aria-label="X">
+        {% render 'icon', icon: 'twitter', class: 'icon' %}
+      </a>
+    </li>
+  {%- endif -%}
+</ul>

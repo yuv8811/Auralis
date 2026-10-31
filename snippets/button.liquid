@@ -1,0 +1,43 @@
+{% comment %}
+  Renders a customizable button or link styled as a button.
+  Accepts:
+  - text: {String} The button text
+  - href: {String} Link destination (if provided, renders an <a>)
+  - style: {String} 'primary' (default), 'secondary', 'outline', 'text'
+  - class: {String} Custom CSS classes
+  - type: {String} 'button', 'submit', 'reset' (default 'button')
+  - name: {String} Name attribute
+  - id: {String} Element ID
+  - disabled: {Boolean}
+  - aria_label: {String}
+  - attributes: {String} Arbitrary extra HTML attributes
+{% endcomment %}
+{% liquid
+  assign btn_style = style | default: 'primary'
+  assign btn_class = 'button button--' | append: btn_style
+  if class
+    assign btn_class = btn_class | append: ' ' | append: class
+  endif
+%}
+
+{% if href != blank %}
+  <a
+    href="{{ href }}"
+    class="{{ btn_class }}"
+    {% if id != blank %}id="{{ id }}"{% endif %}
+    {% if aria_label != blank %}aria-label="{{ aria_label }}"{% endif %}
+    {{ attributes }}>
+    <span class="button__text">{{ text }}</span>
+  </a>
+{% else %}
+  <button
+    type="{{ type | default: 'button' }}"
+    class="{{ btn_class }}"
+    {% if name != blank %}name="{{ name }}"{% endif %}
+    {% if id != blank %}id="{{ id }}"{% endif %}
+    {% if disabled %}disabled{% endif %}
+    {% if aria_label != blank %}aria-label="{{ aria_label }}"{% endif %}
+    {{ attributes }}>
+    <span class="button__text">{{ text }}</span>
+  </button>
+{% endif %}

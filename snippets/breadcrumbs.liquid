@@ -1,0 +1,163 @@
+{% comment %}
+  Renders breadcrumbs navigation with BreadcrumbList structured data.
+{% endcomment %}
+
+{%- unless template == 'index' or template == 'password' or template == '404' -%}
+  {%- assign t = template | split: '.' | first -%}
+
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <div class="page-width">
+      <ol class="breadcrumbs__list list-unstyled" role="list">
+        <li class="breadcrumbs__item">
+          <a class="breadcrumbs__link" href="{{ routes.root_url }}">{{ 'general.breadcrumbs.home' | t }}</a>
+          <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+        </li>
+
+        {%- case t -%}
+          {%- when 'page' -%}
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ page.title }}</span>
+            </li>
+
+          {%- when 'product' -%}
+            {%- if collection and collection.url -%}
+              <li class="breadcrumbs__item">
+                <a class="breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
+                <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+              </li>
+            {%- endif -%}
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ product.title }}</span>
+            </li>
+
+          {%- when 'collection' -%}
+            {%- if collection.handle -%}
+              {%- if current_tags -%}
+                <li class="breadcrumbs__item">
+                  <a class="breadcrumbs__link" href="{{ collection.url }}">{{ collection.title }}</a>
+                  <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+                </li>
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__current" aria-current="page">{{ current_tags | join: " + " }}</span>
+                </li>
+              {%- else -%}
+                <li class="breadcrumbs__item">
+                  <span class="breadcrumbs__current" aria-current="page">{{ collection.title }}</span>
+                </li>
+              {%- endif -%}
+            {%- endif -%}
+
+          {%- when 'blog' -%}
+            {%- if current_tags -%}
+              <li class="breadcrumbs__item">
+                <a class="breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+                <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+              </li>
+              <li class="breadcrumbs__item">
+                <span class="breadcrumbs__current" aria-current="page">{{ current_tags | join: " + " }}</span>
+              </li>
+            {%- else -%}
+              <li class="breadcrumbs__item">
+                <span class="breadcrumbs__current" aria-current="page">{{ blog.title }}</span>
+              </li>
+            {%- endif -%}
+
+          {%- when 'article' -%}
+            <li class="breadcrumbs__item">
+              <a class="breadcrumbs__link" href="{{ blog.url }}">{{ blog.title }}</a>
+              <span class="breadcrumbs__separator" aria-hidden="true">/</span>
+            </li>
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ article.title }}</span>
+            </li>
+
+          {%- when 'cart' -%}
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ 'general.breadcrumbs.cart' | t }}</span>
+            </li>
+
+          {%- when 'search' -%}
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ 'general.breadcrumbs.search' | t }}</span>
+            </li>
+
+          {%- else -%}
+            <li class="breadcrumbs__item">
+              <span class="breadcrumbs__current" aria-current="page">{{ page_title }}</span>
+            </li>
+        {%- endcase -%}
+      </ol>
+    </div>
+  </nav>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": {{ 'general.breadcrumbs.home' | t | json }},
+        "item": {{ request.origin | json }}
+      }
+      {%- assign schema_pos = 2 -%}
+      {%- case t -%}
+        {%- when 'product' -%}
+          {%- if collection and collection.url -%}
+            ,{
+              "@type": "ListItem",
+              "position": {{ schema_pos }},
+              "name": {{ collection.title | json }},
+              "item": {{ request.origin | append: collection.url | json }}
+            }
+            {%- assign schema_pos = schema_pos | plus: 1 -%}
+          {%- endif -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ schema_pos }},
+            "name": {{ product.title | json }},
+            "item": {{ request.origin | append: product.url | json }}
+          }
+        {%- when 'collection' -%}
+          {%- if collection.handle -%}
+            ,{
+              "@type": "ListItem",
+              "position": {{ schema_pos }},
+              "name": {{ collection.title | json }},
+              "item": {{ request.origin | append: collection.url | json }}
+            }
+          {%- endif -%}
+        {%- when 'blog' -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ schema_pos }},
+            "name": {{ blog.title | json }},
+            "item": {{ request.origin | append: blog.url | json }}
+          }
+        {%- when 'article' -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ schema_pos }},
+            "name": {{ blog.title | json }},
+            "item": {{ request.origin | append: blog.url | json }}
+          }
+          {%- assign schema_pos = schema_pos | plus: 1 -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ schema_pos }},
+            "name": {{ article.title | json }},
+            "item": {{ request.origin | append: article.url | json }}
+          }
+        {%- when 'page' -%}
+          ,{
+            "@type": "ListItem",
+            "position": {{ schema_pos }},
+            "name": {{ page.title | json }},
+            "item": {{ request.origin | append: page.url | json }}
+          }
+      {%- endcase -%}
+    ]
+  }
+  </script>
+{%- endunless -%}

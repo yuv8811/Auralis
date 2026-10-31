@@ -1,0 +1,31 @@
+{% comment %}
+  Renders an optimized responsive image.
+  Accepts:
+  - image: {Object} Shopify image object
+  - alt: {String} Alternative text (optional)
+  - class: {String} CSS classes (optional)
+  - sizes: {String} Sizes attribute (optional)
+  - widths: {String} Widths for srcset (optional)
+  - loading: {String} 'lazy' (default) or 'eager'
+  - fetchpriority: {String} 'auto' (default) or 'high'
+{% endcomment %}
+{% liquid
+  if image == blank
+    assign placeholder = 'image' | placeholder_svg_tag: 'placeholder-svg'
+    echo placeholder
+  else
+    assign image_alt = alt | default: image.alt | default: shop.name | escape
+    assign image_loading = loading | default: 'lazy'
+    assign image_fetchpriority = fetchpriority | default: 'auto'
+    assign image_sizes = sizes | default: '100vw'
+    assign image_widths = widths | default: '375, 550, 750, 1100, 1400, 1780, 2000'
+
+    if image_loading == 'eager'
+      assign image_tag_output = image | image_tag: alt: image_alt, class: class, sizes: image_sizes, widths: image_widths, loading: 'eager', fetchpriority: image_fetchpriority
+    else
+      assign image_tag_output = image | image_tag: alt: image_alt, class: class, sizes: image_sizes, widths: image_widths, loading: 'lazy', fetchpriority: image_fetchpriority
+    endif
+
+    echo image_tag_output
+  endif
+%}

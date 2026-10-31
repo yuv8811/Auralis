@@ -1,0 +1,39 @@
+{% comment %}
+  Renders an accessible quantity input stepper.
+  Accepts:
+  - min: {Integer} Minimum quantity (default 1)
+  - value: {Integer} Default value (default 1)
+  - name: {String} Input name attribute (default 'quantity')
+  - id: {String} Input id attribute (optional)
+  - product_title: {String} Title for accessibility labels
+{% endcomment %}
+{% liquid
+  assign qty_min = min | default: 1
+  assign qty_val = value | default: 1
+  assign qty_name = name | default: 'quantity'
+%}
+
+<quantity-input class="quantity">
+  <button
+    type="button"
+    name="minus"
+    class="quantity__button"
+    aria-label="{{ 'products.product.quantity.decrease' | t: product: product_title }}">
+    {% render 'icon', icon: 'minus', class: 'icon icon--small' %}
+  </button>
+  <input
+    type="number"
+    name="{{ qty_name }}"
+    class="quantity__input"
+    min="{{ qty_min }}"
+    value="{{ qty_val }}"
+    {% if id %}id="{{ id }}"{% endif %}
+    aria-label="{{ 'products.product.quantity.input_label' | t: product: product_title }}">
+  <button
+    type="button"
+    name="plus"
+    class="quantity__button"
+    aria-label="{{ 'products.product.quantity.increase' | t: product: product_title }}">
+    {% render 'icon', icon: 'plus', class: 'icon icon--small' %}
+  </button>
+</quantity-input>

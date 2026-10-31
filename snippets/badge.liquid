@@ -1,0 +1,36 @@
+{% comment %}
+  Renders a badge for products (sale, sold out, or custom).
+  Accepts:
+  - type: {String} 'sale', 'sold_out', or 'custom'
+  - text: {String} Custom text (optional)
+  - product: {Object} Product object (optional, for calculating % off)
+  - class: {String} Additional CSS classes
+{% endcomment %}
+{% liquid
+  assign badge_class = class | default: ''
+%}
+
+{% if type == 'sold_out' %}
+  <span class="badge badge--sold-out {{ badge_class }}">
+    {{ 'products.product.sold_out' | t }}
+  </span>
+{% elsif type == 'sale' %}
+  {% liquid
+    assign label = 'products.product.on_sale' | t
+    if settings.sale_badge_type == 'percentage' and product
+      assign compare_price = product.compare_at_price
+      assign current_price = product.price
+      if compare_price > current_price
+        assign savings = compare_price | minus: current_price | times: 100.0 | divided_by: compare_price | round
+        assign label = '-' | append: savings | append: '%'
+      endif
+    endif
+  %}
+  <span class="badge badge--sale {{ badge_class }}">
+    {{ label }}
+  </span>
+{% elsif type == 'custom' and text != blank %}
+  <span class="badge badge--custom {{ badge_class }}">
+    {{ text }}
+  </span>
+{% endif %}

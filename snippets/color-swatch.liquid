@@ -1,0 +1,33 @@
+{% comment %}
+  Renders a color swatch or pill for variant picker.
+  Accepts:
+  - value: {String} Option value (e.g. 'Blue', 'Onyx Black')
+  - name: {String} Input name
+  - checked: {Boolean}
+  - option_index: {Integer}
+  - product_id: {String}
+  - is_color: {Boolean}
+{% endcomment %}
+{% liquid
+  assign swatch_id = 'option-' | append: product_id | append: '-' | append: option_index | append: '-' | append: value | handleize
+  assign color_value = value | downcase | remove: ' '
+%}
+
+<div class="swatch-item">
+  <input
+    type="radio"
+    id="{{ swatch_id }}"
+    name="{{ name }}"
+    value="{{ value | escape }}"
+    class="swatch-item__input visually-hidden"
+    {% if checked %}checked{% endif %}>
+  <label
+    for="{{ swatch_id }}"
+    class="swatch-item__label {% if is_color %}swatch-item__label--color{% else %}swatch-item__label--pill{% endif %}"
+    title="{{ value | escape }}">
+    {% if is_color %}
+      <span class="swatch-item__swatch" style="background-color: {{ color_value }};"></span>
+    {% endif %}
+    <span class="swatch-item__text">{{ value }}</span>
+  </label>
+</div>

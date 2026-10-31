@@ -1,0 +1,152 @@
+{% liquid
+  assign font_body_bold = settings.font_body | font_modify: 'weight', 'bold'
+  assign font_body_italic = settings.font_body | font_modify: 'style', 'italic'
+  assign font_body_bold_italic = font_body_bold | font_modify: 'style', 'italic'
+%}
+
+<style>
+  {{ settings.font_body | font_face: font_display: 'swap' }}
+  {{ settings.font_heading | font_face: font_display: 'swap' }}
+  {% if font_body_bold %}
+    {{ font_body_bold | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if font_body_italic %}
+    {{ font_body_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+  {% if font_body_bold_italic %}
+    {{ font_body_bold_italic | font_face: font_display: 'swap' }}
+  {% endif %}
+
+  :root {
+    --font-body-family: {{ settings.font_body.family }}, {{ settings.font_body.fallback_families }};
+    --font-body-style: {{ settings.font_body.style }};
+    --font-body-weight: {{ settings.font_body.weight }};
+
+    --font-heading-family: {{ settings.font_heading.family }}, {{ settings.font_heading.fallback_families }};
+    --font-heading-style: {{ settings.font_heading.style }};
+    --font-heading-weight: {{ settings.font_heading.weight }};
+
+    --heading-scale: {{ settings.heading_scale | divided_by: 100.0 }};
+    --body-scale: {{ settings.body_scale | divided_by: 100.0 }};
+    --heading-letter-spacing: {{ settings.heading_letter_spacing }}px;
+    --heading-text-transform: {% if settings.heading_uppercase %}uppercase{% else %}none{% endif %};
+
+    --page-width: {{ settings.page_width }}px;
+    --grid-horizontal-space: {{ settings.spacing_grid_horizontal }}px;
+    --grid-vertical-space: {{ settings.spacing_grid_vertical }}px;
+    --sections-vertical-space-desktop: {{ settings.spacing_sections_desktop }}px;
+    --sections-vertical-space-mobile: {{ settings.spacing_sections_mobile }}px;
+
+    --radius-sm: {{ settings.corner_radius | divided_by: 2 }}px;
+    --radius-md: {{ settings.corner_radius }}px;
+    --radius-lg: {{ settings.corner_radius | times: 2 }}px;
+    --radius-pill: 9999px;
+
+    --button-shape-radius: {% if settings.button_shape == 'pill' %}9999px{% elsif settings.button_shape == 'rounded' %}{{ settings.corner_radius }}px{% else %}0px{% endif %};
+    --button-text-transform: {% if settings.button_uppercase %}uppercase{% else %}none{% endif %};
+    --button-border-width: {{ settings.button_border_width }}px;
+
+    /* Scheme 1 Default Root Variables */
+    --color-background: {{ settings.color_scheme_1_bg }};
+    --color-foreground: {{ settings.color_scheme_1_text }};
+    --color-accent: {{ settings.color_scheme_1_accent }};
+    --color-button-bg: {{ settings.color_scheme_1_button_bg }};
+    --color-button-text: {{ settings.color_scheme_1_button_label }};
+    --color-border: {{ settings.color_scheme_1_border }};
+    --color-overlay: rgba(0, 0, 0, 0.45);
+
+    /* Badges */
+    --badge-sale-bg: {{ settings.badge_sale_bg }};
+    --badge-sale-text: {{ settings.badge_sale_text }};
+    --badge-sold-out-bg: {{ settings.badge_sold_out_bg }};
+    --badge-sold-out-text: {{ settings.badge_sold_out_text }};
+
+    /* Fluid Typography Scale */
+    --font-size-xs: clamp(0.75rem, 0.7rem + 0.25vw, 0.8125rem);
+    --font-size-sm: clamp(0.8125rem, 0.77rem + 0.2vw, 0.875rem);
+    --font-size-base: calc(clamp(0.9375rem, 0.9rem + 0.2vw, 1rem) * var(--body-scale));
+    --font-size-md: calc(clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem) * var(--body-scale));
+    --font-size-lg: calc(clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem) * var(--heading-scale));
+    --font-size-xl: calc(clamp(1.5rem, 1.3rem + 1vw, 2rem) * var(--heading-scale));
+    --font-size-2xl: calc(clamp(1.875rem, 1.5rem + 1.8vw, 2.75rem) * var(--heading-scale));
+    --font-size-3xl: calc(clamp(2.25rem, 1.75rem + 2.5vw, 3.75rem) * var(--heading-scale));
+    --font-size-hero: calc(clamp(2.75rem, 2rem + 3.75vw, 5rem) * var(--heading-scale));
+
+    /* Spacing Units */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-6: 1.5rem;
+    --space-8: 2rem;
+    --space-12: 3rem;
+    --space-16: 4rem;
+    --space-24: 6rem;
+
+    /* Transitions & Shadows */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-smooth: 300ms cubic-bezier(0.16, 1, 0.3, 1);
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.03);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.10), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+  }
+
+  .color-scheme-1 {
+    --color-background: {{ settings.color_scheme_1_bg }};
+    --color-foreground: {{ settings.color_scheme_1_text }};
+    --color-accent: {{ settings.color_scheme_1_accent }};
+    --color-button-bg: {{ settings.color_scheme_1_button_bg }};
+    --color-button-text: {{ settings.color_scheme_1_button_label }};
+    --color-border: {{ settings.color_scheme_1_border }};
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .color-scheme-2 {
+    --color-background: {{ settings.color_scheme_2_bg }};
+    --color-foreground: {{ settings.color_scheme_2_text }};
+    --color-accent: {{ settings.color_scheme_2_accent }};
+    --color-button-bg: {{ settings.color_scheme_2_button_bg }};
+    --color-button-text: {{ settings.color_scheme_2_button_label }};
+    --color-border: {{ settings.color_scheme_2_border }};
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .color-scheme-3 {
+    --color-background: {{ settings.color_scheme_3_bg }};
+    --color-foreground: {{ settings.color_scheme_3_text }};
+    --color-accent: {{ settings.color_scheme_3_accent }};
+    --color-button-bg: {{ settings.color_scheme_3_button_bg }};
+    --color-button-text: {{ settings.color_scheme_3_button_label }};
+    --color-border: {{ settings.color_scheme_3_border }};
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .color-scheme-4 {
+    --color-background: {{ settings.color_scheme_4_bg }};
+    --color-foreground: {{ settings.color_scheme_4_text }};
+    --color-accent: {{ settings.color_scheme_4_accent }};
+    --color-button-bg: {{ settings.color_scheme_4_button_bg }};
+    --color-button-text: {{ settings.color_scheme_4_button_label }};
+    --color-border: {{ settings.color_scheme_4_border }};
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  .color-scheme-5 {
+    --color-background: {{ settings.color_scheme_5_bg }};
+    --color-foreground: {{ settings.color_scheme_5_text }};
+    --color-accent: {{ settings.color_scheme_5_accent }};
+    --color-button-bg: {{ settings.color_scheme_5_button_bg }};
+    --color-button-text: {{ settings.color_scheme_5_button_label }};
+    --color-border: {{ settings.color_scheme_5_border }};
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+  }
+
+  {% if settings.custom_css != blank %}
+    {{ settings.custom_css }}
+  {% endif %}
+</style>

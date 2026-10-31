@@ -1,0 +1,113 @@
+{% comment %}
+  Renders a product card.
+  Accepts:
+  - product: {Object} Product object
+  - media_aspect_ratio: {String} 'adapt', 'portrait', 'square'
+  - show_secondary_image: {Boolean}
+  - show_vendor: {Boolean}
+  - show_rating: {Boolean}
+  - show_quick_add: {Boolean}
+  - section_id: {String}
+{% endcomment %}
+{% liquid
+  assign ratio = media_aspect_ratio | default: settings.card_image_ratio | default: 'portrait'
+  assign show_secondary = show_secondary_image | default: settings.card_show_secondary_image
+  assign vendor_visible = show_vendor | default: settings.card_show_vendor
+  assign rating_visible = show_rating | default: settings.card_show_rating
+  assign quick_add_visible = show_quick_add | default: settings.card_enable_quick_add
+  assign featured_media = product.featured_media
+%}
+
+<div class="card product-card" data-product-id="{{ product.id }}">
+  <div class="product-card__media-wrapper product-card__media--{{ ratio }}">
+    <a href="{{ product.url }}" class="product-card__link" aria-label="{{ product.title | escape }}">
+      {%- if featured_media -%}
+        {% liquid
+          assign secondary_image = product.media[1]
+          assign has_secondary = false
+          if show_secondary and secondary_image != blank
+            assign has_secondary = true
+          endif
+        %}
+
+        <div class="product-card__image-container {% if has_secondary %}has-secondary-image{% endif %}">
+          {% render 'image',
+            image: featured_media,
+            class: 'product-card__image product-card__image--primary',
+            sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw',
+            loading: 'lazy'
+          %}
+
+          {%- if has_secondary -%}
+            {% render 'image',
+              image: secondary_image,
+              class: 'product-card__image product-card__image--secondary',
+              sizes: '(min-width: 1200px) 25vw, (min-width: 768px) 33vw, 50vw',
+              loading: 'lazy'
+            %}
+          {%- endif -%}
+        </div>
+      {%- else -%}
+        <div class="product-card__placeholder">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+      {%- endif -%}
+    </a>
+
+    <div class="product-card__badges">
+      {%- if product.available == false -%}
+        {% render 'badge', type: 'sold_out' %}
+      {%- elsif product.compare_at_price > product.price -%}
+        {% render 'badge', type: 'sale', product: product %}
+      {%- endif -%}
+    </div>
+
+    {%- if quick_add_visible and product.available -%}
+      <div class="product-card__quick-add">
+        {%- if product.has_only_default_variant -%}
+          <form method="post" action="{{ routes.cart_add_url }}" data-type="add-to-cart-form">
+            <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="button button--secondary button--small product-card__atc-btn">
+              <span>{{ 'products.product.add_to_cart' | t }}</span>
+            </button>
+          </form>
+        {%- else -%}
+          <button
+            type="button"
+            class="button button--secondary button--small product-card__quick-view-btn"
+            data-product-url="{{ product.url }}"
+            aria-label="{{ 'products.product.view_full_details' | t }}">
+            <span>{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <div class="product-card__content text-{{ settings.card_text_alignment | default: 'left' }}">
+    {%- if vendor_visible and product.vendor != blank -%}
+      <div class="product-card__vendor caption">{{ product.vendor }}</div>
+    {%- endif -%}
+
+    <h3 class="product-card__title">
+      <a href="{{ product.url }}" class="product-card__title-link">
+        {{ product.title | escape }}
+      </a>
+    </h3>
+
+    {%- if rating_visible and product.metafields.reviews.rating.value != blank -%}
+      <div class="product-card__rating">
+        {% render 'rating-stars',
+          rating_value: product.metafields.reviews.rating.value.rating,
+          rating_count: product.metafields.reviews.rating_count.value,
+          show_count: true
+        %}
+      </div>
+    {%- endif -%}
+
+    <div class="product-card__price">
+      {% render 'price', product: product, price_class: 'price--product-card' %}
+    </div>
+  </div>
+</div>

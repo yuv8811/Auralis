@@ -1,0 +1,35 @@
+{% comment %}
+  Renders star ratings for products.
+  Accepts:
+  - rating_value: {Float/Integer}
+  - rating_count: {Integer}
+  - show_count: {Boolean}
+{% endcomment %}
+{% liquid
+  assign rating = rating_value | default: 5.0 | round: 1
+  assign reviews_count = rating_count | default: 0
+  assign integer_part = rating | floor
+  assign decimal_part = rating | minus: integer_part
+  assign half_star_index = 0
+  if decimal_part >= 0.3 and decimal_part <= 0.7
+    assign half_star_index = integer_part | plus: 1
+  endif
+%}
+
+<div class="rating" role="img" aria-label="{{ 'general.accessibility.star_rating' | t: rating: rating }}">
+  <div class="rating__stars" aria-hidden="true">
+    {%- for i in (1..5) -%}
+      {%- if i <= integer_part -%}
+        {% render 'icon', icon: 'star', class: 'icon icon--star' %}
+      {%- elsif i == half_star_index -%}
+        {% render 'icon', icon: 'star-half', class: 'icon icon--star' %}
+      {%- else -%}
+        {% render 'icon', icon: 'star-empty', class: 'icon icon--star' %}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+
+  {%- if show_count and reviews_count > 0 -%}
+    <span class="rating__count caption">({{ reviews_count }})</span>
+  {%- endif -%}
+</div>

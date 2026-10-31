@@ -1,0 +1,59 @@
+{% comment %}
+  Renders a blog article card.
+  Accepts:
+  - article: {Object} Article Liquid object
+  - show_image: {Boolean}
+  - show_date: {Boolean}
+  - show_author: {Boolean}
+  - show_excerpt: {Boolean}
+{% endcomment %}
+<article class="card article-card">
+  {%- if show_image and article.image -%}
+    <a href="{{ article.url }}" class="article-card__image-link">
+      <div class="article-card__image-wrapper aspect-ratio" style="--aspect-ratio: 1.5;">
+        {% render 'image',
+          image: article.image,
+          class: 'article-card__image',
+          sizes: '(min-width: 1200px) 33vw, (min-width: 768px) 50vw, 100vw',
+          loading: 'lazy'
+        %}
+      </div>
+    </a>
+  {%- endif -%}
+
+  <div class="article-card__content">
+    {%- if show_date or show_author -%}
+      <div class="article-card__meta caption">
+        {%- if show_date -%}
+          <span class="article-card__date">{{ article.published_at | time_tag: format: 'date' }}</span>
+        {%- endif -%}
+        {%- if show_date and show_author -%}
+          <span class="article-card__meta-separator" aria-hidden="true">&bull;</span>
+        {%- endif -%}
+        {%- if show_author -%}
+          <span class="article-card__author">{{ article.author }}</span>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <h3 class="article-card__title">
+      <a href="{{ article.url }}" class="article-card__title-link">
+        {{ article.title | escape }}
+      </a>
+    </h3>
+
+    {%- if show_excerpt -%}
+      <div class="article-card__excerpt rte">
+        {%- if article.excerpt.size > 0 -%}
+          {{ article.excerpt | strip_html | truncatewords: 24 }}
+        {%- else -%}
+          {{ article.content | strip_html | truncatewords: 24 }}
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <a href="{{ article.url }}" class="article-card__read-more link">
+      {{ 'blogs.article.read_more' | t }} &rarr;
+    </a>
+  </div>
+</article>

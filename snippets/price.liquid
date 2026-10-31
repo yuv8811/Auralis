@@ -1,0 +1,58 @@
+{% comment %}
+  Renders a list of product's price (regular, sale, unit)
+  Accepts:
+  - product: {Object} Product Liquid object
+  - use_variant: {Boolean} Renders selected or first variant price instead of overall product min price
+  - price_class: {String} Adds a price class to the price element (optional)
+{% endcomment %}
+{% liquid
+  if use_variant
+    assign target = product.selected_or_first_available_variant
+  else
+    assign target = product
+  endif
+
+  assign compare_at_price = target.compare_at_price
+  assign price = target.price | default: 1999
+  assign available = target.available | default: false
+  assign money_price = price | money
+
+  if target == product and product.price_varies
+    assign money_price = 'products.product.from' | t: price: money_price
+  endif
+%}
+
+<div class="price {% if price_class %}{{ price_class }}{% endif %}{% if available == false %} price--sold-out{% endif %}{% if compare_at_price > price %} price--on-sale{% endif %}">
+  <div class="price__container">
+    {%- if compare_at_price > price -%}
+      <div class="price__sale">
+        <span class="visually-hidden">{{ 'products.product.sale_price' | t }}</span>
+        <span class="price-item price-item--sale">{{ money_price }}</span>
+        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+        <s>
+          <span class="price-item price-item--regular price-item--compare">{{ compare_at_price | money }}</span>
+        </s>
+      </div>
+    {%- else -%}
+      <div class="price__regular">
+        <span class="visually-hidden">{{ 'products.product.regular_price' | t }}</span>
+        <span class="price-item price-item--regular">{{ money_price }}</span>
+      </div>
+    {%- endif -%}
+
+    {%- if target.unit_price_measurement -%}
+      <div class="unit-price caption">
+        <span class="visually-hidden">{{ 'products.product.unit_price' | t }}</span>
+        <span class="unit-price__price">{{ target.unit_price | money }}</span>
+        <span aria-hidden="true">/</span>
+        <span class="visually-hidden">&nbsp;{{ 'general.accessibility.unit_price_separator' | t }}&nbsp;</span>
+        <span class="unit-price__unit">
+          {%- if target.unit_price_measurement.reference_value != 1 -%}
+            {{- target.unit_price_measurement.reference_value -}}
+          {%- endif -%}
+          {{ target.unit_price_measurement.reference_unit }}
+        </span>
+      </div>
+    {%- endif -%}
+  </div>
+</div>

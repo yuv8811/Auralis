@@ -1,0 +1,11 @@
+{% comment %}
+  Renders a lightweight pure-CSS spinner.
+  Accepts:
+  - class: {String} CSS class (optional)
+{% endcomment %}
+<div class="loading-spinner {{ class }}" role="status">
+  <span class="visually-hidden">{{ 'general.accessibility.loading' | t }}</span>
+  <svg class="loading-spinner__svg" viewBox="0 0 50 50" aria-hidden="true">
+    <circle class="loading-spinner__circle" cx="25" cy="25" r="20" fill="none" stroke-width="4"></circle>
+  </svg>
+</div>
