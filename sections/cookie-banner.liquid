@@ -53,10 +53,16 @@
       }
       document.getElementById('AcceptCookies')?.addEventListener('click', () => {
         localStorage.setItem('auralis_cookie_consent', 'accepted');
+        if (window.Shopify && window.Shopify.customerPrivacy) {
+          window.Shopify.customerPrivacy.setTrackingConsent(true, () => {});
+        }
         banner.setAttribute('hidden', 'true');
       });
       document.getElementById('DeclineCookies')?.addEventListener('click', () => {
         localStorage.setItem('auralis_cookie_consent', 'declined');
+        if (window.Shopify && window.Shopify.customerPrivacy) {
+          window.Shopify.customerPrivacy.setTrackingConsent(false, () => {});
+        }
         banner.setAttribute('hidden', 'true');
       });
     });

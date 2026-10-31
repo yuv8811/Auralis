@@ -10,7 +10,7 @@
       {%- for block in section.blocks -%}
         <div class="logo-list__item" style="max-width: 140px; opacity: 0.75; filter: grayscale(100%); transition: opacity var(--transition-fast);" {{ block.shopify_attributes }}>
           {%- if block.settings.link != blank -%}
-            <a href="{{ block.settings.link }}" target="_blank" rel="noopener">
+            <a href="{{ block.settings.link }}" target="_blank" rel="noopener noreferrer">
           {%- endif -%}
           {%- if block.settings.image != blank -%}
             {{ block.settings.image | image_url: width: 280 | image_tag: loading: 'lazy', alt: block.settings.image.alt | default: 'Logo' }}

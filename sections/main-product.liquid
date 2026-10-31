@@ -160,11 +160,11 @@
               {%- when 'share' -%}
                 <div class="product__share">
                   <span class="caption" style="font-weight: 500; margin-right: 0.5rem;">{{ 'products.product.share' | t }}:</span>
-                  <a href="//www.facebook.com/sharer.php?u={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener">Facebook</a>
+                  <a href="https://www.facebook.com/sharer.php?u={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener noreferrer">Facebook</a>
                   &bull;
-                  <a href="//twitter.com/share?text={{ product.title | url_param_escape }}&amp;url={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener">X</a>
+                  <a href="https://twitter.com/share?text={{ product.title | url_param_escape }}&amp;url={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener noreferrer">X</a>
                   &bull;
-                  <a href="//pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&amp;media={{ product.featured_media | image_url: width: 1024 }}&amp;description={{ product.title | url_param_escape }}" class="link caption" target="_blank" rel="noopener">Pinterest</a>
+                  <a href="https://pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&amp;media={{ product.featured_media | image_url: width: 1024 }}&amp;description={{ product.title | url_param_escape }}" class="link caption" target="_blank" rel="noopener noreferrer">Pinterest</a>
                 </div>
             {%- endcase -%}
           </div>
