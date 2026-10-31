@@ -1,0 +1,121 @@
+<div class="rich-text color-{{ section.settings.color_scheme }} section-spacing text-center">
+  <div class="page-width" style="max-width: 800px;">
+    {%- for block in section.blocks -%}
+      <div class="rich-text__block" {{ block.shopify_attributes }}>
+        {%- case block.type -%}
+          {%- when 'caption' -%}
+            <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.75rem;">
+              {{ block.settings.caption | escape }}
+            </p>
+          {%- when 'heading' -%}
+            <h2 style="font-size: var(--font-size-2xl); margin-bottom: 1.25rem;">
+              {{ block.settings.heading | escape }}
+            </h2>
+          {%- when 'text' -%}
+            <div class="rte" style="font-size: var(--font-size-md); line-height: 1.8; opacity: 0.85; margin-bottom: 1.5rem;">
+              {{ block.settings.text }}
+            </div>
+          {%- when 'button' -%}
+            {%- if block.settings.button_label != blank -%}
+              {% render 'button',
+                href: block.settings.button_link,
+                text: block.settings.button_label,
+                style: 'primary'
+              %}
+            {%- endif -%}
+        {%- endcase -%}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Rich text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "caption",
+      "name": "Caption",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "caption",
+          "default": "Our Philosophy",
+          "label": "Caption"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "name": "Heading",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Made to be lived in, treasured, and passed down.",
+          "label": "Heading"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Auralis is founded on the belief that everyday items should combine unhurried Scandinavian craftsmanship with architectural restraint.</p>",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "Button",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Learn Our Story",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Rich text",
+      "blocks": [
+        { "type": "caption" },
+        { "type": "heading" },
+        { "type": "text" },
+        { "type": "button" }
+      ]
+    }
+  ]
+}
+{% endschema %}

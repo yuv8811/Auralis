@@ -1,0 +1,76 @@
+{
+  "sections": {
+    "banner": {
+      "type": "image-banner",
+      "settings": {
+        "color_scheme": "scheme-4",
+        "overlay_opacity": 30,
+        "banner_height": 550,
+        "subheading": "Autumn / Winter 2026 Collection",
+        "heading": "Timeless Modernism & Quiet Luxury",
+        "text": "<p>Thoughtfully designed silhouettes made from natural fibers, structured to withstand the passing of seasons.</p>",
+        "button_label": "Explore The Drop",
+        "text_alignment": "center"
+      }
+    },
+    "rich_text": {
+      "type": "rich-text",
+      "blocks": {
+        "caption": {
+          "type": "caption",
+          "settings": {
+            "caption": "Our Philosophy"
+          }
+        },
+        "heading": {
+          "type": "heading",
+          "settings": {
+            "heading": "Made to be lived in, treasured, and passed down."
+          }
+        },
+        "text": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Auralis is founded on the belief that everyday items should combine unhurried Scandinavian craftsmanship with architectural restraint.</p>"
+          }
+        },
+        "button": {
+          "type": "button",
+          "settings": {
+            "button_label": "Learn Our Story"
+          }
+        }
+      },
+      "block_order": [
+        "caption",
+        "heading",
+        "text",
+        "button"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    },
+    "featured_collection": {
+      "type": "featured-collection",
+      "settings": {
+        "color_scheme": "scheme-1",
+        "subheading": "Curated Pieces",
+        "heading": "Featured Selection",
+        "products_to_show": 4,
+        "columns_desktop": "4",
+        "image_ratio": "portrait",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": true,
+        "enable_quick_add": true,
+        "show_view_all": true
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "rich_text",
+    "featured_collection"
+  ]
+}

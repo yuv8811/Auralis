@@ -104,7 +104,8 @@
               {%- when 'quantity_selector' -%}
                 <div class="product-form__quantity">
                   <label class="field__label" for="Quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
-                  {% render 'quantity-input', min: 1, value: 1, id: 'Quantity-' | append: section.id, product_title: product.title %}
+                  {%- assign qty_id = 'Quantity-' | append: section.id -%}
+                  {% render 'quantity-input', min: 1, value: 1, id: qty_id, product_title: product.title %}
                 </div>
 
               {%- when 'buy_buttons' -%}

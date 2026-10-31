@@ -1,0 +1,135 @@
+<div class="image-banner color-{{ section.settings.color_scheme }} section-spacing" style="position: relative; overflow: hidden; min-height: {{ section.settings.banner_height }}px; display: flex; align-items: center;">
+  {%- if section.settings.image != blank -%}
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+      {% render 'image',
+        image: section.settings.image,
+        class: 'banner-image',
+        sizes: '100vw',
+        loading: 'eager',
+        fetchpriority: 'high'
+      %}
+    </div>
+    <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, {{ section.settings.overlay_opacity | divided_by: 100.0 }}); z-index: 2;"></div>
+  {%- endif -%}
+
+  <div class="page-width" style="position: relative; z-index: 3; width: 100%;">
+    <div class="banner__box text-{{ section.settings.text_alignment }}" style="max-width: 720px; margin: {% if section.settings.text_alignment == 'center' %}0 auto{% elsif section.settings.text_alignment == 'right' %}0 0 0 auto{% else %}0{% endif %};">
+      {%- if section.settings.subheading != blank -%}
+        <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.75rem;">
+          {{ section.settings.subheading | escape }}
+        </p>
+      {%- endif -%}
+
+      {%- if section.settings.heading != blank -%}
+        <h2 style="font-size: var(--font-size-hero); line-height: 1.1; margin-bottom: 1.25rem;">
+          {{ section.settings.heading | escape }}
+        </h2>
+      {%- endif -%}
+
+      {%- if section.settings.text != blank -%}
+        <div class="rte" style="font-size: var(--font-size-md); margin-bottom: 2rem; opacity: 0.9;">
+          {{ section.settings.text }}
+        </div>
+      {%- endif -%}
+
+      {%- if section.settings.button_label != blank -%}
+        {% render 'button',
+          href: section.settings.button_link,
+          text: section.settings.button_label,
+          style: 'primary'
+        %}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image banner",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-4"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Banner image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "min": 0,
+      "max": 80,
+      "step": 5,
+      "unit": "%",
+      "label": "Image overlay opacity",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "banner_height",
+      "min": 350,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "label": "Minimum banner height",
+      "default": 550
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Autumn / Winter 2026 Collection",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Timeless Modernism & Quiet Luxury",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Thoughtfully designed silhouettes made from natural fibers, structured to withstand the passing of seasons.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Explore The Drop",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+    {
+      "type": "select",
+      "id": "text_alignment",
+      "label": "Text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "center"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image banner"
+    }
+  ]
+}
+{% endschema %}

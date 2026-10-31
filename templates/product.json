@@ -1,0 +1,86 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title": {
+          "type": "title",
+          "settings": {
+            "show_vendor": true
+          }
+        },
+        "rating": {
+          "type": "rating",
+          "settings": {}
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "inventory": {
+          "type": "inventory",
+          "settings": {
+            "low_inventory_threshold": 5
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {}
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true
+          }
+        },
+        "description": {
+          "type": "description",
+          "settings": {}
+        },
+        "materials": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Materials & Craftsmanship",
+            "content": "<p>Carefully crafted using premium, ethically sourced materials designed to endure.</p>"
+          }
+        },
+        "shipping": {
+          "type": "collapsible_tab",
+          "settings": {
+            "heading": "Shipping & Returns",
+            "content": "<p>Complimentary carbon-neutral shipping on orders over $100. Hassle-free 30-day returns.</p>"
+          }
+        },
+        "share": {
+          "type": "share",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "title",
+        "rating",
+        "price",
+        "inventory",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "description",
+        "materials",
+        "shipping",
+        "share"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1",
+        "gallery_layout": "thumbnails_bottom",
+        "enable_zoom": true
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

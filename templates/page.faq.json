@@ -1,0 +1,41 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-page-faq",
+      "blocks": {
+        "q1": {
+          "type": "question",
+          "settings": {
+            "question": "What is your shipping and return policy?",
+            "answer": "<p>We offer complimentary carbon-neutral shipping on all orders over $100. We also accept 30-day unworn returns in original packaging.</p>"
+          }
+        },
+        "q2": {
+          "type": "question",
+          "settings": {
+            "question": "Where are your products manufactured?",
+            "answer": "<p>Our pieces are designed in-house and handcrafted in small, ethical atelier batches by skilled European artisans.</p>"
+          }
+        },
+        "q3": {
+          "type": "question",
+          "settings": {
+            "question": "How do I care for my items?",
+            "answer": "<p>Each piece comes with a specific care card. Generally, we recommend gentle spot cleaning or eco-friendly dry cleaning.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "q1",
+        "q2",
+        "q3"
+      ],
+      "settings": {
+        "color_scheme": "scheme-1"
+      }
+    }
+  },
+  "order": [
+    "main"
+  ]
+}
