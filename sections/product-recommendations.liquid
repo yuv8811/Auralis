@@ -1,0 +1,76 @@
+<div
+  class="product-recommendations color-{{ section.settings.color_scheme }} section-spacing"
+  data-url="{{ routes.product_recommendations_url }}?section_id={{ section.id }}&product_id={{ product.id }}&limit={{ section.settings.products_to_show }}">
+  <div class="page-width">
+    {%- if recommendations.performed and recommendations.products_count > 0 -%}
+      <div class="text-center" style="margin-bottom: var(--space-8);">
+        <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+      </div>
+
+      <div class="grid grid--4-col grid--2-col">
+        {%- for recommendation in recommendations.products -%}
+          {% render 'product-card', product: recommendation %}
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.querySelector('.product-recommendations');
+    if (!container) return;
+
+    fetch(container.dataset.url)
+      .then(response => response.text())
+      .then(html => {
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        const content = doc.querySelector('.product-recommendations');
+        if (content && content.innerHTML.trim().length) {
+          container.innerHTML = content.innerHTML;
+        }
+      })
+      .catch(e => console.error(e));
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Product recommendations",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "You May Also Admire",
+      "label": "Heading"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "min": 2,
+      "max": 8,
+      "step": 1,
+      "default": 4,
+      "label": "Maximum products to show"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product recommendations"
+    }
+  ]
+}
+{% endschema %}

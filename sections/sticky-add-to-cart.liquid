@@ -1,0 +1,98 @@
+{%- if template contains 'product' -%}
+  <div id="sticky-atc-bar" class="sticky-atc-bar color-{{ section.settings.color_scheme }}" hidden>
+    <div class="page-width" style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem 0;">
+      <div style="display: flex; align-items: center; gap: 1rem;">
+        {%- if product.featured_media -%}
+          {{ product.featured_media | image_url: width: 100, height: 100, crop: 'center' | image_tag: class: 'sticky-atc__image', loading: 'lazy', alt: product.title | escape }}
+        {%- endif -%}
+        <div>
+          <span style="font-weight: 500; font-size: var(--font-size-sm); display: block;">{{ product.title }}</span>
+          <span class="caption" style="opacity: 0.8;">{{ product.price | money }}</span>
+        </div>
+      </div>
+      <div>
+        <form method="post" action="{{ routes.cart_add_url }}" data-type="add-to-cart-form">
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          <button type="submit" class="button button--primary button--small" {% if product.available == false %}disabled{% endif %}>
+            <span>
+              {%- if product.available -%}
+                {{ 'products.product.add_to_cart' | t }}
+              {%- else -%}
+                {{ 'products.product.sold_out' | t }}
+              {%- endif -%}
+            </span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sticky-atc-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 900;
+      border-top: 1px solid var(--color-border);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(100%);
+      transition: transform 0.25s ease;
+    }
+    .sticky-atc-bar.is-visible {
+      transform: translateY(0);
+    }
+    .sticky-atc__image {
+      width: 44px;
+      height: 44px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const bar = document.getElementById('sticky-atc-bar');
+      const mainBtn = document.querySelector('.product-form__submit');
+      if (!bar || !mainBtn) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            bar.removeAttribute('hidden');
+            requestAnimationFrame(() => bar.classList.add('is-visible'));
+          } else {
+            bar.classList.remove('is-visible');
+          }
+        });
+      });
+      observer.observe(mainBtn);
+    });
+  </script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Sticky add to cart",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Sticky add to cart"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,79 @@
+<div class="marquee color-{{ section.settings.color_scheme }}" style="overflow: hidden; white-space: nowrap; padding: 0.85rem 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+  <div class="marquee__track" style="display: inline-flex; animation: marquee-scroll {{ section.settings.speed }}s linear infinite;">
+    {%- for i in (1..6) -%}
+      {%- for block in section.blocks -%}
+        <div class="marquee__item" style="display: inline-flex; align-items: center; padding: 0 2rem; font-size: var(--font-size-sm); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;" {{ block.shopify_attributes }}>
+          <span>{{ block.settings.text | escape }}</span>
+          <span style="margin-left: 2rem; opacity: 0.4;">&bull;</span>
+        </div>
+      {%- endfor -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  @keyframes marquee-scroll {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track {
+      animation: none !important;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Marquee / Ticker",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-4"
+    },
+    {
+      "type": "range",
+      "id": "speed",
+      "min": 10,
+      "max": 60,
+      "step": 5,
+      "unit": "s",
+      "default": 25,
+      "label": "Scroll duration (lower is faster)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text",
+      "name": "Text item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Complimentary Global Shipping Over $100",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Marquee / Ticker",
+      "blocks": [
+        { "type": "text", "settings": { "text": "Sustainable Materials" } },
+        { "type": "text", "settings": { "text": "Handcrafted In Small Batches" } },
+        { "type": "text", "settings": { "text": "Carbon-Neutral Delivery" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

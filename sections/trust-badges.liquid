@@ -1,0 +1,77 @@
+<div class="trust-badges color-{{ section.settings.color_scheme }}" style="padding: 2rem 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+  <div class="page-width">
+    <div class="grid grid--{{ section.blocks.size }}-col grid--2-col" style="gap: 1.5rem; text-align: center;">
+      {%- for block in section.blocks -%}
+        <div class="trust-badge__item" style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;" {{ block.shopify_attributes }}>
+          {% render 'icon', icon: block.settings.icon, class: 'icon' %}
+          <div style="font-size: var(--font-size-sm); font-weight: 600;">{{ block.settings.title | escape }}</div>
+          <div class="caption" style="opacity: 0.75;">{{ block.settings.text | escape }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust badges",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "badge",
+      "name": "Badge",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Shipping truck" },
+            { "value": "return", "label": "Returns" },
+            { "value": "shield", "label": "Security shield" },
+            { "value": "check", "label": "Checkmark" }
+          ],
+          "default": "truck"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Free Worldwide Delivery",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "default": "On all orders over $100",
+          "label": "Subtitle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Trust badges",
+      "blocks": [
+        { "type": "badge", "settings": { "icon": "truck", "title": "Complimentary Shipping", "text": "Worldwide on orders over $100" } },
+        { "type": "badge", "settings": { "icon": "return", "title": "30-Day Returns", "text": "Hassle-free guarantee" } },
+        { "type": "badge", "settings": { "icon": "shield", "title": "Encrypted Security", "text": "256-bit SSL protection" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

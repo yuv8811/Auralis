@@ -1,0 +1,99 @@
+<div class="timeline color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width" style="max-width: 800px;">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="text-center" style="margin-bottom: var(--space-8);">
+        {%- if section.settings.subheading != blank -%}
+          <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="timeline__list" style="position: relative; border-left: 2px solid var(--color-border); margin-left: 1rem; padding-left: 2rem;">
+      {%- for block in section.blocks -%}
+        <div class="timeline__item" style="position: relative; margin-bottom: 2.5rem;" {{ block.shopify_attributes }}>
+          <div style="position: absolute; left: -2.45rem; top: 0.25rem; width: 14px; height: 14px; border-radius: 50%; background-color: var(--color-button-bg); border: 2px solid var(--color-background);"></div>
+          <span class="caption" style="font-weight: 700; color: var(--color-accent); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.25rem;">
+            {{ block.settings.year | escape }}
+          </span>
+          <h3 style="font-size: var(--font-size-lg); margin-bottom: 0.5rem;">{{ block.settings.title | escape }}</h3>
+          <p class="caption" style="opacity: 0.85; line-height: 1.6;">{{ block.settings.text | escape }}</p>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Timeline",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Our Journey",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "A Decade of Pure Craftsmanship",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "milestone",
+      "name": "Milestone",
+      "settings": [
+        {
+          "type": "text",
+          "id": "year",
+          "default": "2020",
+          "label": "Year or date"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "The Founding Atelier",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Started in a quiet Copenhagen studio with a capsule of six timeless tailored coats.",
+          "label": "Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Timeline",
+      "blocks": [
+        { "type": "milestone", "settings": { "year": "2020", "title": "Inception", "text": "Our first studio opens in Copenhagen." } },
+        { "type": "milestone", "settings": { "year": "2023", "title": "Zero-Waste Initiative", "text": "Transitioned 100% of our yarn supply to circular certified wool." } },
+        { "type": "milestone", "settings": { "year": "2026", "title": "Global Presence", "text": "Ateliers established across Paris, Milan, and New York." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

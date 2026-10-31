@@ -1,0 +1,153 @@
+<div class="slideshow color-{{ section.settings.color_scheme }}" data-autorotate="{{ section.settings.auto_rotate }}" data-speed="{{ section.settings.change_slides_speed }}" style="position: relative; overflow: hidden;">
+  <div class="slideshow__slides" style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none;">
+    {%- for block in section.blocks -%}
+      <div
+        class="slideshow__slide"
+        id="Slide-{{ section.id }}-{{ forloop.index }}"
+        style="flex: 0 0 100%; min-height: {{ section.settings.slide_height }}px; position: relative; scroll-snap-align: start; display: flex; align-items: center;"
+        {{ block.shopify_attributes }}>
+        {%- if block.settings.image != blank -%}
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;">
+            {% liquid
+              assign is_first = forloop.first
+              if is_first
+                render 'image', image: block.settings.image, class: 'slide-image', sizes: '100vw', loading: 'eager', fetchpriority: 'high'
+              else
+                render 'image', image: block.settings.image, class: 'slide-image', sizes: '100vw', loading: 'lazy'
+              endif
+            %}
+          </div>
+          <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, {{ block.settings.overlay_opacity | divided_by: 100.0 }}); z-index: 2;"></div>
+        {%- endif -%}
+
+        <div class="page-width" style="position: relative; z-index: 3; width: 100%;">
+          <div class="slideshow__box text-{{ block.settings.text_alignment }}" style="max-width: 650px; margin: {% if block.settings.text_alignment == 'center' %}0 auto{% elsif block.settings.text_alignment == 'right' %}0 0 0 auto{% else %}0{% endif %};">
+            {%- if block.settings.subheading != blank -%}
+              <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">{{ block.settings.subheading | escape }}</p>
+            {%- endif -%}
+            {%- if block.settings.heading != blank -%}
+              <h2 style="font-size: var(--font-size-hero); line-height: 1.1; margin-bottom: 1rem;">{{ block.settings.heading | escape }}</h2>
+            {%- endif -%}
+            {%- if block.settings.button_label != blank -%}
+              {% render 'button', href: block.settings.button_link, text: block.settings.button_label, style: 'primary' %}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Slideshow",
+  "max_blocks": 5,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-4"
+    },
+    {
+      "type": "range",
+      "id": "slide_height",
+      "min": 400,
+      "max": 800,
+      "step": 25,
+      "unit": "px",
+      "default": 600,
+      "label": "Slide height"
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_rotate",
+      "label": "Auto-rotate slides",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "change_slides_speed",
+      "min": 3,
+      "max": 9,
+      "step": 1,
+      "unit": "s",
+      "label": "Change slides every",
+      "default": 5
+    }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Slide image"
+        },
+        {
+          "type": "range",
+          "id": "overlay_opacity",
+          "min": 0,
+          "max": 80,
+          "step": 5,
+          "unit": "%",
+          "default": 25,
+          "label": "Overlay opacity"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "default": "Autumn Essentials",
+          "label": "Subheading"
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Curated Modern Living",
+          "label": "Heading"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Discover Collection",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        },
+        {
+          "type": "select",
+          "id": "text_alignment",
+          "label": "Text alignment",
+          "options": [
+            { "value": "left", "label": "Left" },
+            { "value": "center", "label": "Center" },
+            { "value": "right", "label": "Right" }
+          ],
+          "default": "center"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Slideshow",
+      "blocks": [
+        { "type": "slide" },
+        { "type": "slide" }
+      ]
+    }
+  ]
+}
+{% endschema %}

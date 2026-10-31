@@ -1,0 +1,84 @@
+<div class="logo-list color-{{ section.settings.color_scheme }} section-spacing" style="border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border);">
+  <div class="page-width text-center">
+    {%- if section.settings.heading != blank -%}
+      <p class="caption" style="text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: var(--space-6); opacity: 0.7;">
+        {{ section.settings.heading | escape }}
+      </p>
+    {%- endif -%}
+
+    <div style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 3rem;">
+      {%- for block in section.blocks -%}
+        <div class="logo-list__item" style="max-width: 140px; opacity: 0.75; filter: grayscale(100%); transition: opacity var(--transition-fast);" {{ block.shopify_attributes }}>
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" target="_blank" rel="noopener">
+          {%- endif -%}
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 280 | image_tag: loading: 'lazy', alt: block.settings.image.alt | default: 'Logo' }}
+          {%- else -%}
+            <span style="font-family: var(--font-heading-family); font-size: var(--font-size-md); font-weight: 600;">PARTNER LOGO</span>
+          {%- endif -%}
+          {%- if block.settings.link != blank -%}
+            </a>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Logo list",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Featured In Leading Publications",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Logo image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo list",
+      "blocks": [
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" },
+        { "type": "logo" }
+      ]
+    }
+  ]
+}
+{% endschema %}

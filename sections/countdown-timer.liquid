@@ -1,0 +1,124 @@
+<div class="countdown-timer color-{{ section.settings.color_scheme }} section-spacing text-center">
+  <div class="page-width" style="max-width: 650px;">
+    {%- if section.settings.subheading != blank -%}
+      <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+        {{ section.settings.subheading | escape }}
+      </p>
+    {%- endif -%}
+    {%- if section.settings.heading != blank -%}
+      <h2 style="font-size: var(--font-size-2xl); margin-bottom: 1.5rem;">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+
+    <div class="countdown-timer__digits" data-end-date="{{ section.settings.end_date }}" style="display: flex; justify-content: center; gap: 1.5rem; margin-bottom: 2rem;">
+      <div class="countdown-unit" style="min-width: 60px;">
+        <span class="countdown-val js-days" style="font-size: var(--font-size-3xl); font-weight: 700; display: block; font-family: var(--font-heading-family);">00</span>
+        <span class="caption" style="opacity: 0.7;">Days</span>
+      </div>
+      <div class="countdown-unit" style="min-width: 60px;">
+        <span class="countdown-val js-hours" style="font-size: var(--font-size-3xl); font-weight: 700; display: block; font-family: var(--font-heading-family);">00</span>
+        <span class="caption" style="opacity: 0.7;">Hours</span>
+      </div>
+      <div class="countdown-unit" style="min-width: 60px;">
+        <span class="countdown-val js-minutes" style="font-size: var(--font-size-3xl); font-weight: 700; display: block; font-family: var(--font-heading-family);">00</span>
+        <span class="caption" style="opacity: 0.7;">Mins</span>
+      </div>
+      <div class="countdown-unit" style="min-width: 60px;">
+        <span class="countdown-val js-seconds" style="font-size: var(--font-size-3xl); font-weight: 700; display: block; font-family: var(--font-heading-family);">00</span>
+        <span class="caption" style="opacity: 0.7;">Secs</span>
+      </div>
+    </div>
+
+    {%- if section.settings.button_label != blank -%}
+      {% render 'button', href: section.settings.button_link, text: section.settings.button_label, style: 'primary' %}
+    {%- endif -%}
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const timer = document.querySelector('.countdown-timer__digits');
+    if (!timer) return;
+    const endDateStr = timer.dataset.endDate || '2026-12-31';
+    const targetDate = new Date(endDateStr).getTime();
+
+    function updateTimer() {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+      if (distance < 0) return;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      const dEl = timer.querySelector('.js-days');
+      const hEl = timer.querySelector('.js-hours');
+      const mEl = timer.querySelector('.js-minutes');
+      const sEl = timer.querySelector('.js-seconds');
+
+      if (dEl) dEl.textContent = String(days).padStart(2, '0');
+      if (hEl) hEl.textContent = String(hours).padStart(2, '0');
+      if (mEl) mEl.textContent = String(minutes).padStart(2, '0');
+      if (sEl) sEl.textContent = String(seconds).padStart(2, '0');
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Countdown timer",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-4"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Limited Capsule",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Private Drop Closes Soon",
+      "label": "Heading"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "default": "2026-12-31",
+      "info": "Format: YYYY-MM-DD",
+      "label": "End date"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Shop Before It Sells Out",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Countdown timer"
+    }
+  ]
+}
+{% endschema %}

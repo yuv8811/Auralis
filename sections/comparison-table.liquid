@@ -1,0 +1,107 @@
+<div class="comparison-table color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width" style="max-width: 900px;">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="text-center" style="margin-bottom: var(--space-8);">
+        {%- if section.settings.subheading != blank -%}
+          <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; text-align: left;">
+        <thead>
+          <tr style="border-bottom: 2px solid var(--color-border);">
+            <th style="padding: 1rem; width: 40%;">Feature</th>
+            <th style="padding: 1rem; width: 30%; font-weight: 700; color: var(--color-accent);">{{ shop.name }}</th>
+            <th style="padding: 1rem; width: 30%; opacity: 0.7;">Standard Brands</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr style="border-bottom: 1px solid var(--color-border);" {{ block.shopify_attributes }}>
+              <td style="padding: 1rem; font-weight: 500;">{{ block.settings.feature }}</td>
+              <td style="padding: 1rem;">{{ block.settings.our_brand }}</td>
+              <td style="padding: 1rem; opacity: 0.75;">{{ block.settings.other_brands }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Comparison table",
+  "max_blocks": 8,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Uncompromising Standards",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "How We Compare",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "feature",
+          "default": "Fiber Origin",
+          "label": "Feature"
+        },
+        {
+          "type": "text",
+          "id": "our_brand",
+          "default": "100% Traceable Organic Wool",
+          "label": "Our offering"
+        },
+        {
+          "type": "text",
+          "id": "other_brands",
+          "default": "Blended Synthetic Acrylic",
+          "label": "Competitor offering"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison table",
+      "blocks": [
+        { "type": "row", "settings": { "feature": "Raw Materials", "our_brand": "100% Traceable Organic Natural Fibers", "other_brands": "Synthetic Blends & Plastics" } },
+        { "type": "row", "settings": { "feature": "Manufacturing", "our_brand": "Family-Owned European Mills", "other_brands": "Mass High-Volume Offshoring" } },
+        { "type": "row", "settings": { "feature": "Longevity", "our_brand": "Lifetime Stitch Guarantee", "other_brands": "Fast Season Deprecation" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

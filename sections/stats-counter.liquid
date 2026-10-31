@@ -1,0 +1,89 @@
+<div class="stats-counter color-{{ section.settings.color_scheme }} section-spacing text-center">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div style="margin-bottom: var(--space-8);">
+        <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="grid grid--{{ section.blocks.size }}-col grid--2-col" style="gap: var(--space-6);">
+      {%- for block in section.blocks -%}
+        <div class="stats-counter__item" {{ block.shopify_attributes }}>
+          <div style="font-size: var(--font-size-3xl); font-family: var(--font-heading-family); font-weight: 700; color: var(--color-accent); line-height: 1;">
+            {{ block.settings.number | escape }}
+          </div>
+          <div style="font-size: var(--font-size-md); font-weight: 600; margin: 0.5rem 0 0.25rem;">
+            {{ block.settings.title | escape }}
+          </div>
+          <div class="caption" style="opacity: 0.75;">
+            {{ block.settings.text | escape }}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Stats counter",
+  "max_blocks": 4,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-2"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Impact in Numbers",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "stat",
+      "name": "Stat",
+      "settings": [
+        {
+          "type": "text",
+          "id": "number",
+          "default": "100%",
+          "label": "Stat number"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Natural Fibers",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "default": "Zero synthetic plastics or microfibers.",
+          "label": "Subtitle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Stats counter",
+      "blocks": [
+        { "type": "stat", "settings": { "number": "100%", "title": "Circular Fibers", "text": "Traceable origin" } },
+        { "type": "stat", "settings": { "number": "45K+", "title": "Patrons", "text": "Across 34 countries" } },
+        { "type": "stat", "settings": { "number": "0g", "title": "Virgin Plastic", "text": "100% biodegradable packaging" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,96 @@
+{% liquid
+  assign product = section.settings.product
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+<div class="featured-product color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    {%- if product != blank -%}
+      <div class="grid grid--2-col" style="align-items: center; gap: var(--space-12);">
+        <div class="featured-product__media">
+          <div class="aspect-ratio" style="--aspect-ratio: 1.0; border-radius: var(--radius-md);">
+            {% render 'image',
+              image: product.featured_media,
+              class: 'featured-product__image',
+              sizes: '(min-width: 1000px) 50vw, 100vw',
+              loading: 'lazy'
+            %}
+          </div>
+        </div>
+
+        <div class="featured-product__info">
+          {%- if product.vendor != blank -%}
+            <div class="product-card__vendor caption">{{ product.vendor }}</div>
+          {%- endif -%}
+          <h2 style="font-size: var(--font-size-2xl); margin-bottom: 0.75rem;">
+            <a href="{{ product.url }}" class="link">{{ product.title }}</a>
+          </h2>
+          <div style="margin-bottom: 1.25rem;">
+            {% render 'price', product: product, use_variant: true %}
+          </div>
+          <div class="rte caption" style="margin-bottom: 2rem; opacity: 0.85; line-height: 1.7;">
+            {{ product.description | strip_html | truncatewords: 35 }}
+          </div>
+
+          <form method="post" action="{{ routes.cart_add_url }}" data-type="add-to-cart-form">
+            <input type="hidden" name="id" value="{{ current_variant.id }}">
+            <button type="submit" class="button button--primary" {% if current_variant.available == false %}disabled{% endif %}>
+              <span>
+                {%- if current_variant.available -%}
+                  {{ 'products.product.add_to_cart' | t }}
+                {%- else -%}
+                  {{ 'products.product.sold_out' | t }}
+                {%- endif -%}
+              </span>
+            </button>
+          </form>
+        </div>
+      </div>
+    {%- else -%}
+      <div class="grid grid--2-col" style="align-items: center; gap: var(--space-12);">
+        <div class="aspect-ratio" style="--aspect-ratio: 1.0; border-radius: var(--radius-md);">
+          {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+        </div>
+        <div>
+          <h2 style="font-size: var(--font-size-2xl); margin-bottom: 0.75rem;">Signature Hand-Tailored Coat</h2>
+          <div class="price" style="margin-bottom: 1.25rem;"><span class="price-item">$480.00</span></div>
+          <p class="caption" style="margin-bottom: 2rem; opacity: 0.85;">Selected from the finest virgin wool fleece, crafted with architectural shoulders and raw-edge seam details.</p>
+          <button type="button" class="button button--primary" disabled>
+            <span>{{ 'products.product.add_to_cart' | t }}</span>
+          </button>
+        </div>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Featured product",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "product",
+      "id": "product",
+      "label": "Product"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Featured product"
+    }
+  ]
+}
+{% endschema %}

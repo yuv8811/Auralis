@@ -1,0 +1,114 @@
+<div class="testimonials color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="text-center" style="max-width: 600px; margin: 0 auto var(--space-8);">
+        {%- if section.settings.subheading != blank -%}
+          <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grid grid--3-col grid--2-col" style="gap: var(--space-6);">
+      {%- for block in section.blocks -%}
+        <div class="card testimonial-card" style="padding: 2rem; border: 1px solid var(--color-border); border-radius: var(--radius-md); display: flex; flex-direction: column; justify-content: space-between;" {{ block.shopify_attributes }}>
+          <div>
+            {% render 'rating-stars', rating_value: block.settings.rating, show_count: false %}
+            <blockquote style="margin: 1.25rem 0; font-size: var(--font-size-base); line-height: 1.7; font-style: italic; opacity: 0.9;">
+              &ldquo;{{ block.settings.quote | escape }}&rdquo;
+            </blockquote>
+          </div>
+          <div>
+            <div style="font-weight: 600; font-size: var(--font-size-sm);">{{ block.settings.author | escape }}</div>
+            {%- if block.settings.author_info != blank -%}
+              <div class="caption" style="opacity: 0.7;">{{ block.settings.author_info | escape }}</div>
+            {%- endif -%}
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-2"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Verified Patron Reviews",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "What Our Community Says",
+      "label": "Heading"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "range",
+          "id": "rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5,
+          "label": "Star rating"
+        },
+        {
+          "type": "text",
+          "id": "quote",
+          "default": "The quality of the wool knitwear exceeds every luxury house in my wardrobe. Simply remarkable tailoring.",
+          "label": "Quote"
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "default": "Elena Rostova",
+          "label": "Author name"
+        },
+        {
+          "type": "text",
+          "id": "author_info",
+          "default": "Architect, Milan",
+          "label": "Author subtitle"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

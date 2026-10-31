@@ -1,0 +1,77 @@
+<div id="QuickViewModal" class="quick-view-modal color-{{ section.settings.color_scheme }}" role="dialog" aria-modal="true" aria-hidden="true" hidden>
+  <div class="quick-view-modal__dialog" style="position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; background-color: var(--color-background); border: 1px solid var(--color-border); border-radius: var(--radius-lg); padding: 2rem; z-index: 1060; box-shadow: var(--shadow-lg);">
+    <button type="button" class="quick-view-modal__close" aria-label="{{ 'general.accessibility.close' | t }}" style="position: absolute; top: 1rem; right: 1rem;">
+      {% render 'icon', icon: 'close', class: 'icon' %}
+    </button>
+    <div id="QuickViewModalContent" class="quick-view-modal__content"></div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('QuickViewModal');
+    const content = document.getElementById('QuickViewModalContent');
+    const closeBtn = document.querySelector('.quick-view-modal__close');
+    const backdrop = document.querySelector('.drawer-backdrop');
+
+    if (!modal || !content) return;
+
+    document.querySelectorAll('.product-card__quick-view-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const url = btn.dataset.productUrl;
+        if (!url) return;
+
+        try {
+          const res = await fetch(`${url}?section_id=main-product`);
+          const html = await res.text();
+          const doc = new DOMParser().parseFromString(html, 'text/html');
+          const productInfo = doc.querySelector('.product__info-container');
+          if (productInfo) {
+            content.innerHTML = productInfo.innerHTML;
+            modal.removeAttribute('hidden');
+            backdrop?.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+          }
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    });
+
+    function closeModal() {
+      modal.setAttribute('hidden', 'true');
+      backdrop?.classList.remove('is-active');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn?.addEventListener('click', closeModal);
+    backdrop?.addEventListener('click', closeModal);
+  });
+</script>
+
+{% schema %}
+{
+  "name": "Quick view modal",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Quick view modal"
+    }
+  ]
+}
+{% endschema %}

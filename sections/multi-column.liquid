@@ -1,0 +1,128 @@
+<div class="multi-column color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    {%- if section.settings.heading != blank or section.settings.subheading != blank -%}
+      <div class="text-center" style="max-width: 600px; margin: 0 auto var(--space-8);">
+        {%- if section.settings.subheading != blank -%}
+          <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+            {{ section.settings.subheading | escape }}
+          </p>
+        {%- endif -%}
+        {%- if section.settings.heading != blank -%}
+          <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+        {%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="grid grid--{{ section.settings.columns_desktop }}-col grid--2-col" style="gap: var(--space-6);">
+      {%- for block in section.blocks -%}
+        <div class="card multi-column__item text-{{ section.settings.column_alignment }}" {{ block.shopify_attributes }}>
+          {%- if block.settings.image != blank -%}
+            <div class="aspect-ratio" style="--aspect-ratio: 1.0; border-radius: var(--radius-md); margin-bottom: var(--space-3);">
+              {% render 'image',
+                image: block.settings.image,
+                class: 'multi-column__image',
+                sizes: '(min-width: 1000px) 33vw, 100vw',
+                loading: 'lazy'
+              %}
+            </div>
+          {%- endif -%}
+          {%- if block.settings.title != blank -%}
+            <h3 style="font-size: var(--font-size-md); margin-bottom: 0.5rem;">{{ block.settings.title | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.text != blank -%}
+            <div class="rte caption" style="opacity: 0.85; line-height: 1.6;">{{ block.settings.text }}</div>
+          {%- endif -%}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Multi-column",
+  "max_blocks": 6,
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Our Standards",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Built with Intention",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "options": [
+        { "value": "3", "label": "3 columns" },
+        { "value": "4", "label": "4 columns" }
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "label": "Column text alignment",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "center", "label": "Center" }
+      ],
+      "default": "left"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "column",
+      "name": "Column",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Ethical Sourcing",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>100% certified organic and traceable raw textiles sourced directly from certified fair-trade agricultural co-ops.</p>",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Multi-column",
+      "blocks": [
+        { "type": "column" },
+        { "type": "column" },
+        { "type": "column" }
+      ]
+    }
+  ]
+}
+{% endschema %}

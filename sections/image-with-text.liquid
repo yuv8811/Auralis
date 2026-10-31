@@ -1,0 +1,117 @@
+<div class="image-with-text color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    <div class="grid grid--2-col" style="align-items: center; gap: var(--space-8);">
+      <div class="image-with-text__media-item" style="{% if section.settings.layout == 'image_second' %}order: 2;{% endif %}">
+        <div class="aspect-ratio" style="--aspect-ratio: 1.1; border-radius: var(--radius-md);">
+          {%- if section.settings.image != blank -%}
+            {% render 'image',
+              image: section.settings.image,
+              class: 'image-with-text__image',
+              sizes: '(min-width: 1000px) 50vw, 100vw',
+              loading: 'lazy'
+            %}
+          {%- else -%}
+            {{ 'image' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+      </div>
+
+      <div class="image-with-text__text-item" style="{% if section.settings.layout == 'image_second' %}order: 1;{% endif %}">
+        <div style="max-width: 520px;">
+          {%- if section.settings.subheading != blank -%}
+            <p class="caption" style="text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; margin-bottom: 0.5rem;">
+              {{ section.settings.subheading | escape }}
+            </p>
+          {%- endif -%}
+          {%- if section.settings.heading != blank -%}
+            <h2 style="font-size: var(--font-size-2xl); margin-bottom: 1.25rem;">
+              {{ section.settings.heading | escape }}
+            </h2>
+          {%- endif -%}
+          {%- if section.settings.text != blank -%}
+            <div class="rte" style="font-size: var(--font-size-base); opacity: 0.85; line-height: 1.7; margin-bottom: 1.5rem;">
+              {{ section.settings.text }}
+            </div>
+          {%- endif -%}
+          {%- if section.settings.button_label != blank -%}
+            {% render 'button',
+              href: section.settings.button_link,
+              text: section.settings.button_label,
+              style: 'primary'
+            %}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Image with text",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Desktop image placement",
+      "options": [
+        { "value": "image_first", "label": "Image first" },
+        { "value": "image_second", "label": "Image second" }
+      ],
+      "default": "image_first"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "Artisanal Heritage",
+      "label": "Subheading"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Conscious materials engineered for modern longevity",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "text",
+      "default": "<p>Every garment is created in collaboration with heritage mills across Northern Italy and Portugal, combining sustainable flax and organic wools.</p>",
+      "label": "Text"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "default": "Explore Our Process",
+      "label": "Button label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Image with text"
+    }
+  ]
+}
+{% endschema %}

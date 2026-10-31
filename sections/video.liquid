@@ -1,0 +1,76 @@
+<div class="video-section color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    {%- if section.settings.heading != blank -%}
+      <div class="text-center" style="margin-bottom: var(--space-8);">
+        <h2 style="font-size: var(--font-size-2xl);">{{ section.settings.heading | escape }}</h2>
+      </div>
+    {%- endif -%}
+
+    <div class="aspect-ratio" style="--aspect-ratio: 1.77; border-radius: var(--radius-lg); overflow: hidden;">
+      {%- if section.settings.video_url != blank -%}
+        {%- if section.settings.video_url.type == 'youtube' -%}
+          <iframe
+            src="https://www.youtube.com/embed/{{ section.settings.video_url.id }}?enablejsapi=1"
+            class="js-youtube"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | escape }}"></iframe>
+        {%- elsif section.settings.video_url.type == 'vimeo' -%}
+          <iframe
+            src="https://player.vimeo.com/video/{{ section.settings.video_url.id }}"
+            class="js-vimeo"
+            allow="autoplay; encrypted-media"
+            allowfullscreen
+            title="{{ section.settings.description | escape }}"></iframe>
+        {%- endif -%}
+      {%- else -%}
+        {{ 'lifestyle-1' | placeholder_svg_tag: 'placeholder-svg' }}
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Video",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "The Making of the Winter Capsule",
+      "label": "Heading"
+    },
+    {
+      "type": "video_url",
+      "id": "video_url",
+      "accept": ["youtube", "vimeo"],
+      "default": "https://www.youtube.com/watch?v=_9VUPq3SxOc",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "description",
+      "default": "Behind the scenes in our Milan atelier",
+      "label": "Video alt description"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Video"
+    }
+  ]
+}
+{% endschema %}

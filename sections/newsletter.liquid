@@ -1,0 +1,75 @@
+<div class="newsletter-section color-{{ section.settings.color_scheme }} section-spacing text-center">
+  <div class="page-width" style="max-width: 600px;">
+    {%- if section.settings.heading != blank -%}
+      <h2 style="font-size: var(--font-size-2xl); margin-bottom: 0.75rem;">{{ section.settings.heading | escape }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtext != blank -%}
+      <div class="rte" style="font-size: var(--font-size-base); opacity: 0.85; margin-bottom: 2rem;">
+        {{ section.settings.subtext }}
+      </div>
+    {%- endif -%}
+
+    {% form 'customer', class: 'newsletter-form' %}
+      <input type="hidden" name="contact[tags]" value="newsletter">
+      <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+        <div class="field" style="flex: 1; min-width: 240px; margin-bottom: 0;">
+          <label class="visually-hidden" for="NewsletterForm--{{ section.id }}">{{ 'newsletter.label' | t }}</label>
+          <input
+            id="NewsletterForm--{{ section.id }}"
+            type="email"
+            name="contact[email]"
+            class="field__input text-center"
+            value="{{ form.email }}"
+            placeholder="{{ 'newsletter.placeholder' | t }}"
+            required>
+        </div>
+        <button type="submit" class="button button--primary" name="commit">
+          <span>{{ 'newsletter.button_label' | t }}</span>
+        </button>
+      </div>
+      {%- if form.posted_successfully? -%}
+        <p class="form-status form-status--success" tabindex="-1" autofocus style="margin-top: 1rem;">
+          {{ 'newsletter.success' | t }}
+        </p>
+      {%- endif -%}
+    {% endform %}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-2"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Join Our Inner Circle",
+      "label": "Heading"
+    },
+    {
+      "type": "richtext",
+      "id": "subtext",
+      "default": "<p>Receive private editorial invitations, early access to limited capsule releases, and studio journal notes.</p>",
+      "label": "Subtext"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter"
+    }
+  ]
+}
+{% endschema %}
