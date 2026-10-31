@@ -1,0 +1,78 @@
+<div class="page-width section-spacing">
+  <div class="account-header" style="margin-bottom: 2rem;">
+    <a href="{{ routes.account_url }}" class="link">&larr; {{ 'customer.account.return' | t }}</a>
+    <h1 style="margin-top: 1rem;">{{ 'customer.order.title' | t: name: order.name }}</h1>
+    <p class="caption">{{ 'customer.order.date_html' | t: date: order.created_at | time_tag: format: 'date_at_time' }}</p>
+  </div>
+
+  <div class="grid grid--3-col" style="gap: 3rem;">
+    <div style="grid-column: span 2;">
+      <table role="table" style="width: 100%; border-collapse: collapse;">
+        <thead>
+          <tr style="border-bottom: 1px solid var(--color-border); text-align: left;">
+            <th style="padding: 0.75rem 0;">{{ 'customer.order.product' | t }}</th>
+            <th style="padding: 0.75rem 0;">{{ 'customer.order.sku' | t }}</th>
+            <th style="padding: 0.75rem 0;">{{ 'customer.order.price' | t }}</th>
+            <th style="padding: 0.75rem 0;">{{ 'customer.order.quantity' | t }}</th>
+            <th style="padding: 0.75rem 0; text-align: right;">{{ 'customer.order.total' | t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for line_item in order.line_items -%}
+            <tr style="border-bottom: 1px solid var(--color-border);">
+              <td style="padding: 0.75rem 0;">
+                <div>
+                  {%- if line_item.url != blank -%}
+                    <a href="{{ line_item.url }}" class="link">{{ line_item.title }}</a>
+                  {%- else -%}
+                    <p>{{ line_item.title }}</p>
+                  {%- endif -%}
+                </div>
+              </td>
+              <td style="padding: 0.75rem 0;">{{ line_item.sku }}</td>
+              <td style="padding: 0.75rem 0;">{{ line_item.original_price | money }}</td>
+              <td style="padding: 0.75rem 0;">{{ line_item.quantity }}</td>
+              <td style="padding: 0.75rem 0; text-align: right;">{{ line_item.final_line_price | money }}</td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" style="padding: 0.5rem 0;">{{ 'customer.order.subtotal' | t }}</td>
+            <td style="padding: 0.5rem 0; text-align: right;">{{ order.line_items_subtotal_price | money }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" style="padding: 0.5rem 0;">{{ 'customer.order.shipping' | t }}</td>
+            <td style="padding: 0.5rem 0; text-align: right;">{{ order.shipping_price | money }}</td>
+          </tr>
+          <tr>
+            <td colspan="4" style="padding: 0.5rem 0;">{{ 'customer.order.tax' | t }}</td>
+            <td style="padding: 0.5rem 0; text-align: right;">{{ order.tax_price | money }}</td>
+          </tr>
+          <tr style="font-weight: 700; border-top: 1px solid var(--color-border);">
+            <td colspan="4" style="padding: 0.75rem 0;">{{ 'customer.order.total' | t }}</td>
+            <td style="padding: 0.75rem 0; text-align: right;">{{ order.total_net_amount | money_with_currency }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <div>
+      <h3>{{ 'customer.order.billing_address' | t }}</h3>
+      <p class="caption"><strong>{{ 'customer.order.payment_status' | t }}:</strong> {{ order.financial_status_label }}</p>
+      {{ order.billing_address | format_address }}
+
+      <h3 style="margin-top: 2rem;">{{ 'customer.order.shipping_address' | t }}</h3>
+      <p class="caption"><strong>{{ 'customer.order.fulfillment_status' | t }}:</strong> {{ order.fulfillment_status_label }}</p>
+      {{ order.shipping_address | format_address }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer order",
+  "settings": []
+}
+{% endschema %}
+

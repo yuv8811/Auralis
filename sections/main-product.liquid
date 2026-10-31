@@ -1,0 +1,311 @@
+{{ 'section-product.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'component-product-form.js' | asset_url }}" type="module"></script>
+
+{% liquid
+  assign current_variant = product.selected_or_first_available_variant
+%}
+
+<section class="product color-{{ section.settings.color_scheme }}" data-section-id="{{ section.id }}">
+  <div class="page-width">
+    <div class="product__grid">
+      <!-- Media Gallery -->
+      <div class="product__media-wrapper">
+        {% render 'media-gallery', product: product, layout: section.settings.gallery_layout, enable_zoom: section.settings.enable_zoom %}
+      </div>
+
+      <!-- Product Information -->
+      <div class="product__info-container">
+        {%- for block in section.blocks -%}
+          <div class="product__block product__block--{{ block.type }}" {{ block.shopify_attributes }}>
+            {%- case block.type -%}
+              {%- when '@app' -%}
+                {% render block %}
+
+              {%- when 'title' -%}
+                {%- if product.vendor != blank and block.settings.show_vendor -%}
+                  <div class="product__vendor">{{ product.vendor }}</div>
+                {%- endif -%}
+                <h1 class="product__title">{{ product.title | escape }}</h1>
+
+              {%- when 'price' -%}
+                <div class="price-container-{{ section.id }}">
+                  {% render 'price', product: product, use_variant: true, price_class: 'price--large' %}
+                </div>
+
+              {%- when 'rating' -%}
+                {%- if product.metafields.reviews.rating.value != blank -%}
+                  {% render 'rating-stars',
+                    rating_value: product.metafields.reviews.rating.value.rating,
+                    rating_count: product.metafields.reviews.rating_count.value,
+                    show_count: true
+                  %}
+                {%- endif -%}
+
+              {%- when 'inventory' -%}
+                <div class="inventory-counter" aria-live="polite">
+                  {%- if current_variant.available -%}
+                    {%- if current_variant.inventory_quantity > 0 and current_variant.inventory_quantity <= block.settings.low_inventory_threshold -%}
+                      <span class="inventory-counter__dot inventory-counter__dot--low"></span>
+                      <span>{{ 'products.product.inventory.low_stock_with_count' | t: count: current_variant.inventory_quantity }}</span>
+                    {%- else -%}
+                      <span class="inventory-counter__dot"></span>
+                      <span>{{ 'products.product.inventory.in_stock' | t }}</span>
+                    {%- endif -%}
+                  {%- else -%}
+                    <span class="inventory-counter__dot" style="background-color: #D32F2F;"></span>
+                    <span>{{ 'products.product.inventory.out_of_stock' | t }}</span>
+                  {%- endif -%}
+                </div>
+
+              {%- when 'variant_picker' -%}
+                {%- unless product.has_only_default_variant -%}
+                  <product-form data-section="{{ section.id }}">
+                    <div class="variant-picker">
+                      {%- for option in product.options_with_values -%}
+                        <fieldset class="field" style="border: none; margin-bottom: 1.25rem;">
+                          <legend class="field__label"><strong>{{ option.name }}:</strong> {{ option.selected_value }}</legend>
+                          <div class="swatch-list" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.5rem;">
+                            {%- for value in option.values -%}
+                              {% liquid
+                                assign is_checked = false
+                                if option.selected_value == value
+                                  assign is_checked = true
+                                endif
+                                assign is_color = false
+                                assign downcase_name = option.name | downcase
+                                if downcase_name contains 'color' or downcase_name contains 'colour'
+                                  assign is_color = true
+                                endif
+                              %}
+                              <label class="swatch-item">
+                                <input
+                                  type="radio"
+                                  name="{{ option.name }}"
+                                  value="{{ value | escape }}"
+                                  data-option-input
+                                  class="visually-hidden"
+                                  {% if is_checked %}checked{% endif %}>
+                                <span class="swatch-item__label {% if is_color %}swatch-item__label--color{% else %}swatch-item__label--pill{% endif %}">
+                                  {% if is_color %}
+                                    <span class="swatch-item__swatch" style="background-color: {{ value | downcase | remove: ' ' }};"></span>
+                                  {% else %}
+                                    <span>{{ value }}</span>
+                                  {% endif %}
+                                </span>
+                              </label>
+                            {%- endfor -%}
+                          </div>
+                        </fieldset>
+                      {%- endfor -%}
+                    </div>
+                  </product-form>
+                {%- endunless -%}
+
+              {%- when 'quantity_selector' -%}
+                <div class="product-form__quantity">
+                  <label class="field__label" for="Quantity-{{ section.id }}">{{ 'products.product.quantity.label' | t }}</label>
+                  {% render 'quantity-input', min: 1, value: 1, id: 'Quantity-' | append: section.id, product_title: product.title %}
+                </div>
+
+              {%- when 'buy_buttons' -%}
+                <product-form data-section="{{ section.id }}">
+                  <script type="application/json" data-product-variants>
+                    {{ product.variants | json }}
+                  </script>
+                  {%- form 'product', product, id: 'ProductForm', class: 'product-form', data-type: 'add-to-cart-form' -%}
+                    <input type="hidden" name="id" value="{{ current_variant.id }}">
+                    <div class="product-form__buttons">
+                      <button
+                        type="submit"
+                        name="add"
+                        class="button button--primary product-form__submit"
+                        {% if current_variant.available == false %}disabled{% endif %}>
+                        <span>
+                          {%- if current_variant.available -%}
+                            {{ 'products.product.add_to_cart' | t }}
+                          {%- else -%}
+                            {{ 'products.product.sold_out' | t }}
+                          {%- endif -%}
+                        </span>
+                      </button>
+                      {%- if block.settings.show_dynamic_checkout -%}
+                        {{ form | payment_button }}
+                      {%- endif -%}
+                    </div>
+                  {%- endform -%}
+                </product-form>
+
+              {%- when 'description' -%}
+                {%- if product.description != blank -%}
+                  <div class="product__description rte">
+                    {{ product.description }}
+                  </div>
+                {%- endif -%}
+
+              {%- when 'collapsible_tab' -%}
+                <div class="product__accordion">
+                  <details>
+                    <summary>
+                      <span>{{ block.settings.heading | escape }}</span>
+                      {% render 'icon', icon: 'chevron-down', class: 'icon icon--small' %}
+                    </summary>
+                    <div class="product__accordion-content rte">
+                      {{ block.settings.content }}
+                      {{ block.settings.page.content }}
+                    </div>
+                  </details>
+                </div>
+
+              {%- when 'share' -%}
+                <div class="product__share">
+                  <span class="caption" style="font-weight: 500; margin-right: 0.5rem;">{{ 'products.product.share' | t }}:</span>
+                  <a href="//www.facebook.com/sharer.php?u={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener">Facebook</a>
+                  &bull;
+                  <a href="//twitter.com/share?text={{ product.title | url_param_escape }}&amp;url={{ shop.url | append: product.url }}" class="link caption" target="_blank" rel="noopener">X</a>
+                  &bull;
+                  <a href="//pinterest.com/pin/create/button/?url={{ shop.url | append: product.url }}&amp;media={{ product.featured_media | image_url: width: 1024 }}&amp;description={{ product.title | url_param_escape }}" class="link caption" target="_blank" rel="noopener">Pinterest</a>
+                </div>
+            {%- endcase -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product information",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "select",
+      "id": "gallery_layout",
+      "label": "Desktop gallery layout",
+      "options": [
+        { "value": "thumbnails_bottom", "label": "Thumbnails bottom" },
+        { "value": "stacked", "label": "Stacked images" }
+      ],
+      "default": "thumbnails_bottom"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_zoom",
+      "label": "Enable image zoom",
+      "default": true
+    }
+  ],
+  "blocks": [
+    {
+      "type": "@app"
+    },
+    {
+      "type": "title",
+      "name": "Title",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_vendor",
+          "label": "Show vendor",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "price",
+      "name": "Price",
+      "limit": 1
+    },
+    {
+      "type": "rating",
+      "name": "Rating",
+      "limit": 1
+    },
+    {
+      "type": "inventory",
+      "name": "Inventory status",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "range",
+          "id": "low_inventory_threshold",
+          "min": 1,
+          "max": 20,
+          "step": 1,
+          "default": 5,
+          "label": "Low inventory threshold"
+        }
+      ]
+    },
+    {
+      "type": "variant_picker",
+      "name": "Variant picker",
+      "limit": 1
+    },
+    {
+      "type": "quantity_selector",
+      "name": "Quantity selector",
+      "limit": 1
+    },
+    {
+      "type": "buy_buttons",
+      "name": "Buy buttons",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "show_dynamic_checkout",
+          "label": "Show dynamic checkout buttons",
+          "default": true
+        }
+      ]
+    },
+    {
+      "type": "description",
+      "name": "Description",
+      "limit": 1
+    },
+    {
+      "type": "collapsible_tab",
+      "name": "Collapsible row",
+      "settings": [
+        {
+          "type": "text",
+          "id": "heading",
+          "default": "Materials & Care",
+          "label": "Heading"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Row content"
+        },
+        {
+          "type": "page",
+          "id": "page",
+          "label": "Row content from page"
+        }
+      ]
+    },
+    {
+      "type": "share",
+      "name": "Share",
+      "limit": 1
+    }
+  ]
+}
+{% endschema %}
+

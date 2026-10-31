@@ -1,0 +1,117 @@
+<div class="cart-page color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    <h1 class="cart-page__title">{{ 'sections.cart.title' | t }}</h1>
+
+    {%- if cart.empty? -%}
+      <div class="cart-empty text-center" style="padding: 4rem 0;">
+        <p>{{ 'sections.cart.empty' | t }}</p>
+        {%- assign continue_text = 'sections.cart.continue_shopping' | t -%}
+        {% render 'button', href: routes.all_products_collection_url, text: continue_text, style: 'primary' %}
+      </div>
+    {%- else -%}
+      <form action="{{ routes.cart_url }}" method="post" id="cart">
+        <table role="table" style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--color-border); text-align: left;">
+              <th style="padding: 1rem 0;">{{ 'sections.cart.headings.product' | t }}</th>
+              <th style="padding: 1rem 0;">{{ 'sections.cart.headings.quantity' | t }}</th>
+              <th style="padding: 1rem 0; text-align: right;">{{ 'sections.cart.headings.total' | t }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for item in cart.items -%}
+              <tr style="border-bottom: 1px solid var(--color-border);">
+                <td style="padding: 1.25rem 0; display: flex; gap: 1.25rem; align-items: center;">
+                  {%- if item.image -%}
+                    <a href="{{ item.url }}">
+                      {{ item.image | image_url: width: 150 | image_tag: class: 'cart-item__image', loading: 'lazy', alt: item.title | escape }}
+                    </a>
+                  {%- endif -%}
+                  <div>
+                    <a href="{{ item.url }}" class="link" style="font-weight: 500;">{{ item.product.title | escape }}</a>
+                    {%- unless item.product.has_only_default_variant -%}
+                      <p class="caption" style="opacity: 0.7; margin: 0.25rem 0;">{{ item.variant.title | escape }}</p>
+                    {%- endunless -%}
+                    <p class="caption">{{ item.original_price | money }}</p>
+                  </div>
+                </td>
+                <td style="padding: 1.25rem 0;">
+                  <quantity-input class="quantity">
+                    <button type="button" name="minus" class="quantity__button" aria-label="{{ 'general.accessibility.previous' | t }}">
+                      {% render 'icon', icon: 'minus', class: 'icon icon--small' %}
+                    </button>
+                    <input
+                      type="number"
+                      name="updates[]"
+                      value="{{ item.quantity }}"
+                      min="0"
+                      class="quantity__input"
+                      aria-label="{{ 'sections.cart.quantity' | t }}">
+                    <button type="button" name="plus" class="quantity__button" aria-label="{{ 'general.accessibility.next' | t }}">
+                      {% render 'icon', icon: 'plus', class: 'icon icon--small' %}
+                    </button>
+                  </quantity-input>
+                </td>
+                <td style="padding: 1.25rem 0; text-align: right; font-weight: 600;">
+                  {{ item.final_line_price | money }}
+                </td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+        </table>
+
+        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 2rem;">
+          <div style="max-width: 400px; width: 100%;">
+            {%- if settings.cart_show_note -%}
+              <label class="field__label" for="Cart-note">{{ 'sections.cart.note' | t }}</label>
+              <textarea
+                name="note"
+                id="Cart-note"
+                class="field__input"
+                rows="4"
+                placeholder="{{ 'sections.cart.note_placeholder' | t }}">{{ cart.note }}</textarea>
+            {%- endif -%}
+          </div>
+
+          <div style="text-align: right;">
+            <div style="font-size: var(--font-size-xl); font-weight: 600; margin-bottom: 0.5rem;">
+              <span>{{ 'sections.cart.subtotal' | t }}: </span>
+              <span>{{ cart.total_price | money_with_currency }}</span>
+            </div>
+            <p class="caption" style="margin-bottom: 1.5rem; opacity: 0.8;">{{ 'sections.cart.taxes_and_shipping_at_checkout' | t }}</p>
+            <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+              <button type="submit" name="update" class="button button--secondary">
+                <span>{{ 'sections.cart.update' | t }}</span>
+              </button>
+              <button type="submit" name="checkout" class="button button--primary">
+                <span>{{ 'sections.cart.checkout' | t }}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
+

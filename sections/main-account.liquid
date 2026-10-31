@@ -1,0 +1,62 @@
+<div class="page-width section-spacing">
+  <div class="account-header" style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2rem;">
+    <h1>{{ 'customer.account.title' | t }}</h1>
+    <a href="{{ routes.account_logout_url }}" class="link">{{ 'customer.account.log_out' | t }}</a>
+  </div>
+
+  <div class="grid grid--3-col" style="gap: 3rem;">
+    <div style="grid-column: span 2;">
+      <h2>{{ 'customer.orders.title' | t }}</h2>
+      {% paginate customer.orders by 20 %}
+        {%- if customer.orders.size > 0 -%}
+          <table role="table" class="order-history" style="width: 100%; border-collapse: collapse;">
+            <caption class="visually-hidden">{{ 'customer.orders.title' | t }}</caption>
+            <thead>
+              <tr style="border-bottom: 1px solid var(--color-border); text-align: left;">
+                <th style="padding: 0.75rem 0;">{{ 'customer.orders.order_number' | t }}</th>
+                <th style="padding: 0.75rem 0;">{{ 'customer.orders.date' | t }}</th>
+                <th style="padding: 0.75rem 0;">{{ 'customer.orders.payment_status' | t }}</th>
+                <th style="padding: 0.75rem 0;">{{ 'customer.orders.fulfillment_status' | t }}</th>
+                <th style="padding: 0.75rem 0; text-align: right;">{{ 'customer.orders.total' | t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for order in customer.orders -%}
+                <tr style="border-bottom: 1px solid var(--color-border);">
+                  <td style="padding: 0.75rem 0;">
+                    <a href="{{ order.customer_url }}" class="link">
+                      {{ order.name }}
+                    </a>
+                  </td>
+                  <td style="padding: 0.75rem 0;">{{ order.created_at | time_tag: format: 'date' }}</td>
+                  <td style="padding: 0.75rem 0;">{{ order.financial_status_label }}</td>
+                  <td style="padding: 0.75rem 0;">{{ order.fulfillment_status_label }}</td>
+                  <td style="padding: 0.75rem 0; text-align: right;">{{ order.total_net_amount | money_with_currency }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {% render 'pagination', paginate: paginate %}
+        {%- else -%}
+          <p>{{ 'customer.orders.none' | t }}</p>
+        {%- endif -%}
+      {% endpaginate %}
+    </div>
+
+    <div>
+      <h2>{{ 'customer.account.details' | t }}</h2>
+      {{ customer.default_address | format_address }}
+      <a href="{{ routes.account_addresses_url }}" class="button button--secondary button--small" style="margin-top: 1rem;">
+        <span>{{ 'customer.account.view_addresses' | t: count: customer.addresses_count }}</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer account",
+  "settings": []
+}
+{% endschema %}
+

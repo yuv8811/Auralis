@@ -1,0 +1,40 @@
+<div class="collection-hero color-{{ section.settings.color_scheme }}" style="padding: var(--space-8) 0; border-bottom: 1px solid var(--color-border);">
+  <div class="page-width">
+    <div class="collection-hero__inner" style="max-width: 800px;">
+      <h1 class="collection-hero__title" style="margin-bottom: var(--space-3);">{{ collection.title | escape }}</h1>
+      {%- if section.settings.show_collection_description and collection.description != blank -%}
+        <div class="collection-hero__description rte" style="opacity: 0.85;">
+          {{ collection.description }}
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Collection banner",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_collection_description",
+      "label": "Show collection description",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
+

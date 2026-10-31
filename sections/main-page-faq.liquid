@@ -1,0 +1,92 @@
+<div class="faq-page color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width" style="max-width: 800px;">
+    <h1 class="text-center" style="margin-bottom: var(--space-8);">{{ page.title | escape }}</h1>
+
+    <div class="faq-accordion-list">
+      {%- for block in section.blocks -%}
+        <div class="product__accordion" {{ block.shopify_attributes }}>
+          <details>
+            <summary style="font-size: var(--font-size-md);">
+              <span>{{ block.settings.question | escape }}</span>
+              {% render 'icon', icon: 'chevron-down', class: 'icon icon--small' %}
+            </summary>
+            <div class="product__accordion-content rte" style="padding-top: 0.5rem; opacity: 0.85;">
+              {{ block.settings.answer }}
+            </div>
+          </details>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<!-- FAQPage Schema for SEO -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- for block in section.blocks -%}
+      {
+        "@type": "Question",
+        "name": {{ block.settings.question | json }},
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": {{ block.settings.answer | strip_html | json }}
+        }
+      }{%- unless forloop.last -%},{%- endunless -%}
+    {%- endfor -%}
+  ]
+}
+</script>
+
+{% schema %}
+{
+  "name": "FAQ page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "question",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "default": "What is your shipping and return policy?",
+          "label": "Question"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "default": "<p>We offer complimentary carbon-neutral shipping on orders over $100 and a 30-day return window for unworn items.</p>",
+          "label": "Answer"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ page",
+      "blocks": [
+        { "type": "question" },
+        { "type": "question" }
+      ]
+    }
+  ]
+}
+{% endschema %}
+

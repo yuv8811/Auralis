@@ -1,0 +1,100 @@
+<article class="article color-{{ section.settings.color_scheme }} section-spacing" itemscope itemtype="http://schema.org/BlogPosting">
+  <div class="page-width" style="max-width: 800px;">
+    <div class="article__header text-center" style="margin-bottom: var(--space-8);">
+      <a href="{{ blog.url }}" class="link caption" style="margin-bottom: 0.5rem; display: inline-block;">&larr; {{ blog.title }}</a>
+      <h1 class="article__title" itemprop="headline">{{ article.title | escape }}</h1>
+      <div class="article__meta caption" style="opacity: 0.8;">
+        <span itemprop="datePublished">{{ article.published_at | time_tag: format: 'date' }}</span>
+        <span>&bull;</span>
+        <span itemprop="author">{{ article.author }}</span>
+      </div>
+    </div>
+
+    {%- if article.image -%}
+      <div class="article__image-wrapper aspect-ratio" style="--aspect-ratio: 1.77; border-radius: var(--radius-md); margin-bottom: var(--space-8);">
+        {% render 'image',
+          image: article.image,
+          class: 'article__image',
+          sizes: '(min-width: 1000px) 800px, 100vw',
+          loading: 'eager',
+          fetchpriority: 'high'
+        %}
+      </div>
+    {%- endif -%}
+
+    <div class="article__content rte" itemprop="articleBody" style="font-size: var(--font-size-md); line-height: 1.8;">
+      {{ article.content }}
+    </div>
+
+    {%- if blog.comments_enabled? -%}
+      <div class="article__comments" style="margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
+        <h2 style="margin-bottom: 1.5rem;">{{ 'blogs.article.comments' | t: count: article.comments_count }}</h2>
+        {%- if article.comments_count > 0 -%}
+          {% paginate article.comments by 5 %}
+            {%- for comment in article.comments -%}
+              <div class="comment" style="padding: 1rem 0; border-bottom: 1px solid var(--color-border);">
+                <div class="comment__meta caption" style="font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>{{ comment.author }}</span> &bull; <span>{{ comment.created_at | time_tag: format: 'date' }}</span>
+                </div>
+                <div class="comment__content rte">{{ comment.content }}</div>
+              </div>
+            {%- endfor -%}
+            {% render 'pagination', paginate: paginate %}
+          {% endpaginate %}
+        {%- endif -%}
+
+        {% form 'new_comment', article, class: 'comment-form', style: 'margin-top: 2rem;' %}
+          <h3>{{ 'blogs.article.comment_form_title' | t }}</h3>
+          {%- if form.posted_successfully? -%}
+            <p class="form-status form-status--success" tabindex="-1" autofocus>
+              {%- if blog.moderated? -%}
+                {{ 'blogs.article.success_moderated' | t }}
+              {%- else -%}
+                {{ 'blogs.article.success' | t }}
+              {%- endif -%}
+            </p>
+          {%- endif -%}
+          <div class="grid grid--2-col">
+            <div class="field">
+              <label class="field__label" for="CommentForm-author">{{ 'blogs.article.name' | t }}</label>
+              <input type="text" id="CommentForm-author" name="comment[author]" class="field__input" value="{{ form.author }}" required>
+            </div>
+            <div class="field">
+              <label class="field__label" for="CommentForm-email">{{ 'blogs.article.email' | t }}</label>
+              <input type="email" id="CommentForm-email" name="comment[email]" class="field__input" value="{{ form.email }}" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="field__label" for="CommentForm-body">{{ 'blogs.article.message' | t }}</label>
+            <textarea id="CommentForm-body" name="comment[body]" rows="5" class="field__input" required>{{ form.body }}</textarea>
+          </div>
+          <button type="submit" class="button button--primary">
+            <span>{{ 'blogs.article.post' | t }}</span>
+          </button>
+        {% endform %}
+      </div>
+    {%- endif -%}
+  </div>
+</article>
+
+{% schema %}
+{
+  "name": "Article content",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
+

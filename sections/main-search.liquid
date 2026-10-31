@@ -1,0 +1,76 @@
+<div class="search-page color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width">
+    <h1 class="text-center" style="margin-bottom: var(--space-6);">{{ 'sections.main_search.title' | t }}</h1>
+
+    <div style="max-width: 600px; margin: 0 auto 3rem;">
+      <form action="{{ routes.search_url }}" method="get" role="search">
+        <div style="display: flex; gap: 0.5rem;">
+          <input
+            type="search"
+            name="q"
+            value="{{ search.terms | escape }}"
+            placeholder="Search our store..."
+            class="field__input"
+            aria-label="{{ 'general.breadcrumbs.search' | t }}">
+          <button type="submit" class="button button--primary">
+            <span>{{ 'general.breadcrumbs.search' | t }}</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    {%- if search.performed -%}
+      {%- paginate search.results by 16 -%}
+        <div class="caption text-center" style="margin-bottom: 2rem;">
+          {%- if search.results_count == 0 -%}
+            <p>{{ 'sections.main_search.no_results' | t: terms: search.terms }}</p>
+          {%- else -%}
+            <p>{{ 'sections.main_search.results_with_count' | t: count: search.results_count, terms: search.terms }}</p>
+          {%- endif -%}
+        </div>
+
+        {%- if search.results_count > 0 -%}
+          <div class="grid grid--4-col grid--2-col">
+            {%- for item in search.results -%}
+              {%- case item.object_type -%}
+                {%- when 'product' -%}
+                  {% render 'product-card', product: item %}
+                {%- when 'article' -%}
+                  {% render 'article-card', article: item, show_image: true, show_date: true %}
+                {%- when 'page' -%}
+                  <div class="card" style="border: 1px solid var(--color-border); padding: 1.5rem; border-radius: var(--radius-md);">
+                    <span class="badge" style="margin-bottom: 0.5rem; align-self: flex-start;">Page</span>
+                    <h3 style="font-size: var(--font-size-md);"><a href="{{ item.url }}" class="link">{{ item.title }}</a></h3>
+                    <p class="caption" style="opacity: 0.8;">{{ item.content | strip_html | truncatewords: 20 }}</p>
+                  </div>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+          {% render 'pagination', paginate: paginate %}
+        {%- endif -%}
+      {%- endpaginate -%}
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
+

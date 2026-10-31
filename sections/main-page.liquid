@@ -1,0 +1,30 @@
+<div class="page color-{{ section.settings.color_scheme }} section-spacing">
+  <div class="page-width" style="max-width: 900px;">
+    <h1 class="page__title text-center" style="margin-bottom: var(--space-8);">{{ page.title | escape }}</h1>
+    <div class="page__content rte">
+      {{ page.content }}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Page",
+  "settings": [
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "label": "Color scheme",
+      "options": [
+        { "value": "scheme-1", "label": "Scheme 1" },
+        { "value": "scheme-2", "label": "Scheme 2" },
+        { "value": "scheme-3", "label": "Scheme 3" },
+        { "value": "scheme-4", "label": "Scheme 4" },
+        { "value": "scheme-5", "label": "Scheme 5" }
+      ],
+      "default": "scheme-1"
+    }
+  ]
+}
+{% endschema %}
+

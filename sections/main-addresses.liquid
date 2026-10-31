@@ -1,0 +1,77 @@
+<div class="page-width section-spacing">
+  <div class="account-header" style="margin-bottom: 2rem;">
+    <a href="{{ routes.account_url }}" class="link">&larr; {{ 'customer.account.return' | t }}</a>
+    <h1 style="margin-top: 1rem;">{{ 'customer.addresses.title' | t }}</h1>
+  </div>
+
+  <div class="addresses-container">
+    <div style="margin-bottom: 3rem;">
+      <h2>{{ 'customer.addresses.add_new' | t }}</h2>
+      {%- form 'customer_address', customer.new_address -%}
+        <div class="grid grid--2-col">
+          <div class="field">
+            <label class="field__label" for="AddressFirstNameNew">{{ 'customer.addresses.first_name' | t }}</label>
+            <input type="text" id="AddressFirstNameNew" name="address[first_name]" value="{{ form.first_name }}" class="field__input">
+          </div>
+          <div class="field">
+            <label class="field__label" for="AddressLastNameNew">{{ 'customer.addresses.last_name' | t }}</label>
+            <input type="text" id="AddressLastNameNew" name="address[last_name]" value="{{ form.last_name }}" class="field__input">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label" for="AddressAddress1New">{{ 'customer.addresses.address1' | t }}</label>
+          <input type="text" id="AddressAddress1New" name="address[address1]" value="{{ form.address1 }}" class="field__input">
+        </div>
+        <div class="grid grid--2-col">
+          <div class="field">
+            <label class="field__label" for="AddressCityNew">{{ 'customer.addresses.city' | t }}</label>
+            <input type="text" id="AddressCityNew" name="address[city]" value="{{ form.city }}" class="field__input">
+          </div>
+          <div class="field">
+            <label class="field__label" for="AddressZipNew">{{ 'customer.addresses.zip' | t }}</label>
+            <input type="text" id="AddressZipNew" name="address[zip]" value="{{ form.zip }}" class="field__input" autocapitalize="characters">
+          </div>
+        </div>
+        <div class="field">
+          <label class="field__label" for="AddressPhoneNew">{{ 'customer.addresses.phone' | t }}</label>
+          <input type="tel" id="AddressPhoneNew" name="address[phone]" value="{{ form.phone }}" class="field__input">
+        </div>
+        <div style="margin: 1rem 0;">
+          {{ form.set_as_default_checkbox }}
+          <label for="address_default_address_new">{{ 'customer.addresses.set_default' | t }}</label>
+        </div>
+        <button type="submit" class="button button--primary">
+          <span>{{ 'customer.addresses.add' | t }}</span>
+        </button>
+      {%- endform -%}
+    </div>
+
+    <h2>{{ 'customer.addresses.title' | t }}</h2>
+    <div class="grid grid--3-col" style="gap: 2rem;">
+      {%- for address in customer.addresses -%}
+        <div class="card" style="border: 1px solid var(--color-border); padding: 1.5rem; border-radius: var(--radius-md);">
+          {%- if address == customer.default_address -%}
+            <span class="badge" style="margin-bottom: 0.75rem; align-self: flex-start;">{{ 'customer.addresses.default' | t }}</span>
+          {%- endif -%}
+          {{ address | format_address }}
+          <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+            <form class="address-delete-form" method="post" action="/account/addresses/{{ address.id }}">
+              <input type="hidden" name="_method" value="delete">
+              <button type="submit" class="button button--secondary button--small" onclick="return confirm('{{ 'customer.addresses.delete_confirm' | t }}');">
+                <span>{{ 'customer.addresses.delete' | t }}</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Customer addresses",
+  "settings": []
+}
+{% endschema %}
+

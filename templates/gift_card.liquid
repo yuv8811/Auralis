@@ -1,0 +1,61 @@
+{% layout none %}
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Gift Card &ndash; {{ shop.name }}</title>
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+    <style>
+      .gift-card-wrapper {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        background-color: var(--color-background);
+        color: var(--color-foreground);
+      }
+      .gift-card-card {
+        max-width: 500px;
+        width: 100%;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-lg);
+        padding: 2.5rem;
+        text-align: center;
+        box-shadow: var(--shadow-lg);
+      }
+      .gift-card__code {
+        font-family: monospace;
+        font-size: var(--font-size-lg);
+        padding: 0.75rem 1.5rem;
+        background-color: rgba(0, 0, 0, 0.04);
+        border: 1px dashed var(--color-border);
+        border-radius: var(--radius-md);
+        display: inline-block;
+        margin: 1.5rem 0;
+        letter-spacing: 0.1em;
+      }
+    </style>
+  </head>
+  <body class="gift-card-wrapper color-scheme-1">
+    <div class="gift-card-card">
+      <h2>{{ shop.name }}</h2>
+      <h1 style="font-size: var(--font-size-xl); margin-top: 0.5rem;">Gift Card</h1>
+      <div style="font-size: var(--font-size-2xl); font-weight: 700; margin: 1rem 0;">
+        {{ gift_card.balance | money_with_currency }}
+      </div>
+      {%- if gift_card.enabled == false or gift_card.expired -%}
+        <p class="badge badge--sold-out">Expired or Disabled</p>
+      {%- endif -%}
+      <div class="gift-card__code" onclick="navigator.clipboard.writeText('{{ gift_card.code }}'); alert('Code copied!');" title="Click to copy">
+        {{ gift_card.code | format_code }}
+      </div>
+      <p class="caption" style="opacity: 0.8;">Use this code at checkout to redeem your gift card balance.</p>
+      <div style="margin-top: 2rem;">
+        <a href="{{ shop.url }}" class="button button--primary" target="_blank" rel="noopener">Start Shopping</a>
+      </div>
+    </div>
+  </body>
+</html>
+
